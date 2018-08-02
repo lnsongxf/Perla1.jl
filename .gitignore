@@ -1,3 +1,9 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf
+*.gz

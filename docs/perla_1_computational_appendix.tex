@@ -1,0 +1,257 @@
+% !TEX program = pdflatex
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,amsopn,amstext,thmtools,setspace,ifthen,tabularx}
+\usepackage{bbm,dsfont,lmodern,accents} %Display packages
+\usepackage[T1]{fontenc}
+\usepackage[nohead]{geometry}
+\usepackage{xr-hyper}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[bookmarks=false,
+	pdfstartview={FitV},
+	pdftitle={A Model of Product Awareness and Industry Life Cycle},
+	pdfauthor={Jesse Perla},
+	pdfcreator={Jesse Perla},
+	pdfkeywords={Macroeconomics, Firm Growth, Firm Dynamics, Firm Heterogeneity, Industry Equilibrium, Industry Life Cycle, Product Differentiation},
+	pdfsubject={Macroeconomics},
+	colorlinks=true,
+	linkcolor=darkgray,
+	citecolor=darkgray,
+	urlcolor=darkgray,
+	filecolor=darkgray,
+	anchorcolor=darkgray, 
+	breaklinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{}{}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{property}{Property}{Properties}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\declaretheorem[numbered=yes]{definition}
+\newtheorem{example}{Example}
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+
+%%%%%%%%%%%% Macros%%%%%%
+\newcommand{\includepsfragfig}[5][width=\columnwidth] {%
+	\begin{figure}[!htp]%
+		\centering		
+		\psfragfig[#1]{#2}{#5} %	
+		\ifthenelse{\equal{#3}{}}{}{\caption{#3}} % Conditionally shows the caption
+		\ifthenelse{\equal{#4}{}}{}{\label{#4}} % Conditionally shows the alabel
+	\end{figure}
+}
+\newcommand{\set}[1]{\ensuremath{\left\{{#1}\right\}}}
+\newcommand{\pd}[2]{\ensuremath{\frac{\partial#1}{\partial#2}}}
+\newcommand{\tpd}[2]{\ensuremath{\tfrac{\partial#1}{\partial#2}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\N}[1][]{\ensuremath{\mathbb{N_{#1}}}}
+\newcommand{\Q}[0]{\ensuremath{\mathbb{Q}}}
+\newcommand{\D}[1][]{\ensuremath{\boldsymbol{\partial}_{#1}}}
+\newcommand{\st}[0]{\,\text{s.t.}\,}
+\newcommand{\ow}[0]{\,\text{o.w.}\,}
+\newcommand{\prob}[2][]{\ensuremath{\mathbb{P}_{#1}\left( {#2} \right)}}
+\newcommand{\cprob}[2]{\ensuremath{\mathbb{P}\left( {#1}\left| {#2} \right. \right)}}
+\newcommand{\expec}[2][]{\ensuremath{\mathbb{E}_{{#1}}\left[ {#2} \right]}}
+\newcommand{\condexpec}[3][]{\ensuremath{\mathbb{E}_{#1}\left[{#2} \; \middle| \; {#3} \right]}}
+\newcommand{\diff}{\ensuremath{\mathrm{d}}}
+\newcommand{\indicator}[1]{\ensuremath{\mathds{1}\left\{{#1}\right\}}}
+\newcommand{\abs}[1]{\ensuremath{\left| {#1}\right|}}
+\newcommand{\argmax}[2]{\ensuremath{\mathrm{arg} \max_{{#1}}\left\{ {#2} \right\}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\geometry{left=1in,right=1in,top=0.6in,bottom=1in}
+
+\interfootnotelinepenalty=1000
+
+\onehalfspacing
+\begin{document}
+\title{\Large A Model of Product Awareness and Industry Life Cycle\\
+Online Computational  Appendix
+}
+\author{Jesse Perla \\ University of British Columbia}
+\date{Draft Date: \today}
+\maketitle
+\appendix
+\makeatletter
+\def\@seccntformat#1{Appendix\ \csname the#1\endcsname\quad}
+\makeatother
+\makeatletter
+\def\@seccntformat#1{\csname Pref@#1\endcsname \csname the#1\endcsname\quad}
+\def\Pref@section{Appendix~}
+\makeatother
+\numberwithin{equation}{section}
+
+\section{Count Law of Motion for Awareness}
+The following summarizes the law of motion for the main paper, which uses the count of firms in the awareness sets
+\begin{align}
+	\D[a]f(a) &= f(a) \cdot \Q(a),\quad \text{given initial condition } f(0)\in\R^{N+1}\label{eq:f-evolution-ode}
+	\end{align}
+	
+	\noindent The solution to \cref{eq:f-evolution-ode} in terms of matrix exponentials is, % given any age-varying intensity matrix,
+	\begin{align}
+	f(a) &= \begin{bmatrix}1 & 0 & \ldots & 0\end{bmatrix}\cdot e^{\int_{0}^{a} \Q(s)\diff s} %\label{eq:f-constant-Q-evolution}\\
+	%\intertext{For the simple case of a time invariant intensity matrix,}
+	= \begin{bmatrix}1 & 0 & \ldots & 0\end{bmatrix}\cdot e^{a\Q},\, \text{for an age invariant $\Q$}\label{eq:f-constant-Q-evolution}
+\end{align}
+
+\begin{example}[Baseline Awareness Process]\label{example:bass-style}
+	Given $\mu,\theta,$ and $\theta_d$, awareness evolves according to the following age-dependent intensity matrix.
+	
+	\begin{equation}
+	\Q(a) = \left[\begin{smallmatrix}
+	-\left(\theta + \theta_d (1 - f_0(a))\right) & \theta + \theta_d (1 - f_0(a)) & 0 & \ldots & & & \ldots & 0\\
+	\mu  & -\mu - \tfrac{N-1}{N}\theta & \tfrac{N-1}{N}\theta & 0 & \ldots & & \ldots & 0\\
+	%0 & \mu & - \left(\tfrac{N-2}{N}\theta + \mu \right) & \tfrac{N-2}{N}\theta & 0 & \ldots &  \ldots & 0\\
+	\vdots & & & & & & & \vdots\\ % & \ldots& \ldots& \ldots & \ldots & \ldots & \vdots\\
+	0 & 0 & 0 & 0 & \ldots &\mu & -\mu -\tfrac{1}{N}\theta & \tfrac{1}{N}\theta\\
+	0 & 0 & 0 & 0 & \ldots & 0 & \mu & -\mu
+	\end{smallmatrix}\right]\in \R^{(N+1)\times(N+1)}\label{eq:baseline-Q}
+	\end{equation}
+	When $\mu=0$, the KFE \cref{eq:f-constant-Q-evolution} with generator \cref{eq:baseline-Q} separates into an ODE in the number of customers aware of no products in the category, $\D[a] f_0(a) = -f_0(a)\left(\theta + \theta_d (1 - f_0(a))\right)$.  With the initial condition $f_0(0) = 1$, the solution to this ODE is
+	\begin{equation}
+	f_0(a) = \frac{\theta_d + \theta}{\theta_d + \theta \exp\left((\theta_d + \theta )a\right)}
+	\end{equation}
+	\end{example}
+
+% \begin{example}[Without Word of Mouth]\label{example:balking}
+% 	Assume that each consumer has an intensity $\theta > 0$ of becoming aware of a firm in an industry, and an equal probability of becoming aware of a particular firm (including the potential of repeating a meeting with an existing firm in her information set, which doesn't add to the count).  Also assume that customers can forget an existing firm at rate $\mu \geq 0$.  Then, the infinitesimal generator is
+% 	\begin{equation}
+% 	\Q = \left[\begin{smallmatrix}
+% 	-\theta & \theta & 0 & \ldots & & & \ldots & 0\\
+% 	\mu & - \left(\tfrac{N-1}{N}\theta + \mu \right) & \tfrac{N-1}{N}\theta & 0 & \ldots & & \ldots & 0\\
+% 	0 & \mu & - \left(\tfrac{N-2}{N}\theta + \mu \right) & \tfrac{N-2}{N}\theta & 0 & \ldots &  \ldots & 0\\
+% 	\vdots & & & & & & & \vdots\\ % & \ldots& \ldots& \ldots & \ldots & \ldots & \vdots\\
+% 	0 & 0 & 0 & 0 & \ldots &\mu & -\left(\tfrac{1}{N}\theta + \mu \right) & \tfrac{1}{N}\theta\\
+% 	0 & 0 & 0 & 0 & \ldots & 0 & \mu & -\mu
+% 	\end{smallmatrix}\right]\in \R^{(N+1)\times(N+1)}
+% 	\end{equation}
+% \end{example}
+
+
+\section{General Law of Motion for Awareness}
+The goal of the laws of motion for awareness are to build a model of the proportion of agents that have a particular awareness state for the firms in an industry.
+
+
+The key questions of heterogeneity in this model are: (1) is the productivity/quality of firms symmetric?; (2) do all firms enter at the same time?; and (3) conditional on a particular time of entry, does awareness evolve symmetrically for those firms (i.e. independent of productivity/quality).  In this section, I describe the most general approach, allowing for complete heterogeneit with no assumptions of symmetry in the awareness process.  In \cref{sec:cohort-symmetry} we examine a simplification where awareness is assumed to evolve symmetrically for all productivity/quality types in a given cohort, which significantly decreases the required dimensionality of the problem.  Later, we will show that this is a sufficient statistic to calculation the pricing, output, and profits functions of firms with heterogeneity in their productivity/quality.
+
+\subsection{Cardinality and General Law of Motion}
+For simplicity--and before any assumptions on symmetry--if there were a maximum of $\mathcal{I} \equiv \set{1,\ldots N}$ firms operating in an industry over the lifetime, then the cardinality of the possible awareness sets, $A$ for consumers is $\mathbf{2}^{\mathcal{I}}$, with cardinality $\mathbf{N} \equiv \abs{\mathbf{2}^{\mathcal{I}}} = \sum_{k=0}^{N} \dbinom{N}{k}$
+
+Then the awareness state in an industry of age $a$ is $\hat{f}(a, A) : \R^{\mathbf{N}} \to \R$, with $\sum\limits_{A \in \mathbf{2}^{\mathcal{I}}}\hat{f}(a, A) = 1$.  For the stochastic process for link formation, we assume it is Markovian, which leads to the general intensity matrix $\hat{\Q}(a,\hat{f})$ in a continuous-time Markov chain, where $\hat{f}(a) \in \R^{\mathbf{N}}$ is some ordering of the discrete states.  With this, the transition matrix can depend on both the age of the industry as well as the current distribution of awareness sets.  With this, the Kolmogorov forward equation for awareness is,
+\begin{align}
+	\D[a] \hat{f}(a) &= \hat{f}(a)\cdot\hat{\Q}(a,\hat{f})\label{eq:differentiated-LOM-nonlinear}
+\end{align}
+which is a nonlinear system of ODEs.  Except for the possibility of aggregate shocks to awareness evolution, this allows for the most general Markovian process possible--with heterogeneity along every dimension.
+
+\subsection{Example Stochastic Process}\label{sec:fully-differentiated-example}
+
+In this section will modify the process to allow for full differentiation of firms in the $\hat{f}(a,A)$ evolution process.  The infinitesimal generator of the Markov chain (no longer just a count process) is denoted $\hat{\Q}$, and for simplicity I assume there is no forgetting (i.e., $\mu = 0$).\footnote{  To create a Markov chain for this process, one needs to establish a consistent ordering of the states in $\hat{f}(a, A)$.  This can be done with the lexicographic matrix \cref{eq:lexicographic-matrix}.}
+
+\paragraph{Baseline Awareness Model With Full Differentiation}
+The following is intended to replicate the  \cref{example:bass-style} example with a model of full-differentiation.
+\begin{example}[Baseline Awareness Model With Full Differentiation]\label{example:balking-full-differentation}
+	As in \cref{example:bass-style}, assume each consumer has a $\theta > 0$ probability of becoming aware of some firm in an industry, and an equal probability of becoming aware of a particular firm (including the potential of repeating a meeting with an existing firm in there information set, which doesn't change awareness) and word of mouth diffusion.  The infinitesimal generator is $\hat{\Q}(a)\in \R^{\mathbf{N}\times\mathbf{N}}$, where the $(\iota, \iota')$ element is of the Markov process is given by
+	\begin{align}
+	\hat{\Q}_{\iota \iota'}(a) & = \begin{cases}
+	- (\theta + \theta_d(1 - \hat{f}_0(a)) & \iota' = \iota = 1\\
+	\frac{\theta + \theta_d(1 - \hat{f}_0(a))}{N}  & \iota = 1, 1 < \iota \leq N\\
+	- \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota > 1\\
+	\tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
+	0 & \ow
+	\end{cases}\label{eq:differentiated-Q-wom}\\
+	\intertext{Awareness evolves through the solution to the following system of differential equations given the initial condition $\hat{f}(0)$,}
+	\D[a] \hat{f}(a) &= \hat{f}(a)\cdot\hat{\Q}(a)\label{eq:differentiated-LOM-wom}
+	\intertext{In the case with no word-of-mouth diffusion, $\theta_d = 0$, \cref{eq:differentiated-Q-wom} simplifies to the age-invariant Markov-chain}
+	\hat{\Q}_{\iota \iota'} & = \begin{cases}
+	- \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota\\
+	\tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
+	0 & \ow
+	\end{cases}
+	\end{align}
+	and the unconditional distribution of awareness in the economy with $\theta_d = 0$ in \cref{eq:differentiated-LOM-wom} evolves from the initial condition as,
+	\begin{equation}
+	\hat{f}(a) = \hat{f}(0) \cdot e^{a \hat{\Q}}\in\R^{\mathbf{N}}
+	\end{equation}
+\end{example}
+
+As previously discussed, if there is any symmetry in the set of firms, this process can be simplified substantially.  Regardless, systems of ODEs of the form \cref{eq:differentiated-LOM-wom} can be solved numerically for \textit{very} large $\mathbf{N}$ using modern techniques for solving systems of linear ODEs.
+
+\subsection{Mapping Duopoly Example to the Count Distribution}\label{sec:mapping-duopoly}
+This section takes a simple symmetric duopoly with firms $\set{1,2}$ and connects \cref{example:balking-full-differentation} with $\hat{f}(\cdot)$  and $\hat{\Q}$, to \cref{example:bass-style}  with $f(\cdot)$ and $\Q$, look at a duopoly.
+
+From \cref{example:balking-full-differentation}, the pmf is $\hat{f}(a, A)$ for $A$ accorded according to $\set{\emptyset, \set{1}, \set{2}, \set{1,2}}$, and with the infinitesimal generator,
+$$
+\hat{\Q}(a) \equiv \begin{bmatrix}
+-(\theta + \theta_d(1 - \hat{f}_0(a))) & (\theta + \theta_d(1 - \hat{f}_0(a)))/2 & (\theta + \theta_d(1 - \hat{f}_0(a)))/2 & 0\\
+0 & -\theta/2 & 0 & \theta/2\\
+0 & 0 & -\theta/2 & \theta/2\\
+0 & 0 & 0 & 0
+\end{bmatrix}
+$$
+From these, define the count distribution as: $f_0(a) \equiv \hat{f}(a, \emptyset), f_1(a) \equiv \hat{f}(a, \set{1}) + \hat{f}(a, \set{2}),$ and $ f_2(a) \equiv \hat{f}(a, \set{1,2})$.  The generator becomes identical to  \cref{example:bass-style} with $N=2$,
+$$
+\Q(a) \equiv \begin{bmatrix}
+-(\theta + \theta_d(1 - f_0(a))) & \theta + \theta_d(1 - f_0(a))& 0\\
+0 & -\theta/2 & \theta/2\\
+0 & 0 & 0
+\end{bmatrix}
+$$
+
+\section{Symmetric Awareness Process by Cohort}\label{sec:cohort-symmetry}
+The full model for awareness in the previous 
+
+
+\section{Profits and Prices}
+Define,
+\begin{align}
+	\bar{\Gamma} &\equiv \Gamma(1-\sigma(\kappa-1))^{1/(1-\kappa)}
+	\intertext{With $\Gamma(\cdot)$ the gamma function.  Assume,}
+	0 &< \sigma < \frac{1}{\kappa - 1}
+\end{align}
+Total Demand in an industry of age $a$ with firms of quality $q_i$ choosing prices $p_i$ is
+\begin{equation}
+y_i(a,p) = \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{\kappa - 1}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{q_i}{q_{i'}} p_{i'}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand}
+\end{equation}
+
+\section{General Notation}
+This section establishes some general notation used in the solutions.
+Define the lexicographic ordering matrix as
+\begin{align}
+	\mathbf{L} &\equiv \begin{bmatrix}0& 0& \ldots& 0\\
+											1& 0& \ldots& 0\\
+											0& 1& \ldots& 0\\
+											\ldots\\
+											1& 1& \ldots& 1\\
+	\end{bmatrix}_{\mathbf{N} \times N}\label{eq:lexicographic-matrix}
+\end{align}
+In \cref{eq:lexicographic-matrix}, each row represents a possible awareness state for an individual, with the $N$ firms ordered on the horizontal axis.  For a given row, a $0$ denotes that the firm is not in that awareness state, and $1$ denotes that it is.  \cref{tab:lexicographic-comparison} provides an example of the mapping.  Additionally, define the following vectors and matrices:
+\begin{enumerate}
+	\item $\mathbf{I}$ is the diagonal matrix of size $N\times N$
+	\item $\vec{\mathbf{1}}$ is the vector of 1's of size $N$
+	\item $\mathbf{e}_{\iota}$ is a vector of 0's with a $1$ at the $\iota$'th position
+%	\item An example of the matrix transpose is $A^T$
+\end{enumerate}
+{\small
+\begin{table}[h]
+	\centering
+	\begin{tabularx}{\linewidth}{l | X | X}
+	\hline\hline
+$\iota$ Index & Set ${A}_{j}(t)$ & Row of $L$\\
+\hline
+	$1$&$\set{\emptyset}$&$\begin{bmatrix}0& 0& 0& 0& \ldots& 0\end{bmatrix}$\\
+	$2$&$\set{1}$&$\begin{bmatrix}1& 0& 0&0& \ldots& 0\end{bmatrix}$\\
+	$3$&$\set{2}$&$\begin{bmatrix}0& 1& 0&0& \ldots& 0\end{bmatrix}$\\
+	\ldots& &\\
+	$N + 2$&$\set{1,2}$&$\begin{bmatrix}1& 1& 0&0& \ldots& 0\end{bmatrix}$\\
+	$N+3$&$\set{1, 3}$&$\begin{bmatrix}1& 0& 1& 0&\ldots& 0\end{bmatrix}$\\
+	\ldots& &\\
+	$\mathbf{N}$&$\set{1, 2 \ldots N}$&$\begin{bmatrix}1& 1& 1& 1&\ldots& 1\end{bmatrix}$\\
+\hline
+\end{tabularx}
+	\caption{Lexicographic Ordering of States}
+	\label{tab:lexicographic-comparison}
+\end{table}
+}
+
+\end{document}
