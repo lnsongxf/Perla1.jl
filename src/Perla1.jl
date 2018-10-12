@@ -1,5 +1,9 @@
 module Perla1
 
-# package code goes here
+using LinearAlgebra
+
+include("transition/get_Q.jl")
+
+export get_Q
 
 end # module
