@@ -1,2 +1,5 @@
+name = "Perla1"
+uuid = "1ba507c4-04fb-439d-a50c-50cdde046eaf"
+
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
