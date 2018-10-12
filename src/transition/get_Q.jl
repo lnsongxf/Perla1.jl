@@ -4,14 +4,9 @@ function get_Q(N, μ, θ, θ_d)
 
     # Q(a); note that the only time dependent part is on the first row 
     function Q(a) # (A.3) in appendix
-        # FIXIT: there must be a more efficient way to do it
-        # deepcopy is needed anyway, since manipulation has to be done
-        # if we stick with using Q_base,
-        # which is less expensive than computing it every time Q(a) is computed
-        Q_a = deepcopy(Q_base)
-        Q_a[1,1] = -(θ + θ_d*(1-f_0(a)))
-        Q_a[1,2] = θ + θ_d*(1-f_0(a))
-        return Q_a
+        Q_base[1,1] = -(θ + θ_d*(1-f0(a)))
+        Q_base[1,2] = θ + θ_d*(1-f0(a))
+        return Q_base
     end
     
     return Q
