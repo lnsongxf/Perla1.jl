@@ -1,5 +1,5 @@
 function get_Q(N, μ, θ, θ_d)
-    f_0(a) = (θ_d + θ) / (θ_d + θ*exp((θ_d + θ)*a)) # (A.4) in appendix
+    f0(a) = (θ_d + θ) / (θ_d + θ*exp((θ_d + θ)*a)) # (A.4) in appendix
     Q_base = get_Q_base(N, μ, θ)
 
     # Q(a); note that the only time dependent part is on the first row 
