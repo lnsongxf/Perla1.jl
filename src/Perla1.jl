@@ -1,6 +1,6 @@
 module Perla1
 
-using LinearAlgebra
+using SparseArrays
 
 include("transition/get_Q.jl")
 
