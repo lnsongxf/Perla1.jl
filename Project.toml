@@ -2,4 +2,5 @@ name = "Perla1"
 uuid = "1ba507c4-04fb-439d-a50c-50cdde046eaf"
 
 [deps]
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
