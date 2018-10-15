@@ -20,5 +20,5 @@ function get_Q_base(N, μ, θ)
     dl = fill(μ, N)
     d = collect(-μ.-(N:-1:0).*(θ/N))
     du = collect((N:-1:1).*(θ/N))
-    return LinearAlgebra.Tridiagonal(dl,d,du)
+    return SparseArrays.spdiagm(-1 => dl, 0 => d, 1 => du)
 end
