@@ -82,7 +82,7 @@ Online Computational  Appendix
 \makeatother
 \numberwithin{equation}{section}
 
-\section{Count Law of Motion for Awareness}
+\section{Model of Awareness in Main Paper}
 The following summarizes the law of motion for the main paper, which uses the count of firms in the awareness sets
 \begin{align}
 	\D[a]f(a) &= f(a) \cdot \Q(a),\quad \text{given initial condition } f(0)\in\R^{N+1}\label{eq:f-evolution-ode}
@@ -135,68 +135,61 @@ The goal of the laws of motion for awareness are to build a model of the proport
 
 The key questions of heterogeneity in this model are: (1) is the productivity/quality of firms symmetric?; (2) do all firms enter at the same time?; and (3) conditional on a particular time of entry, does awareness evolve symmetrically for those firms (i.e. independent of productivity/quality).  In this section, I describe the most general approach, allowing for complete heterogeneit with no assumptions of symmetry in the awareness process.  In \cref{sec:cohort-symmetry} we examine a simplification where awareness is assumed to evolve symmetrically for all productivity/quality types in a given cohort, which significantly decreases the required dimensionality of the problem.  Later, we will show that this is a sufficient statistic to calculation the pricing, output, and profits functions of firms with heterogeneity in their productivity/quality.
 
-\subsection{Cardinality and General Law of Motion}
-For simplicity--and before any assumptions on symmetry--if there were a maximum of $\mathcal{I} \equiv \set{1,\ldots N}$ firms operating in an industry over the lifetime, then the cardinality of the possible awareness sets, $A$ for consumers is $\mathbf{2}^{\mathcal{I}}$, with cardinality $\mathbf{N} \equiv \abs{\mathbf{2}^{\mathcal{I}}} = \sum_{k=0}^{N} \dbinom{N}{k}$
+\subsection{Cardinality and Distributions}
+Before any assumptions on symmetry--if there were a maximum of $\mathcal{I} \equiv \set{1,\ldots N}$ firms operating in an industry over the lifetime, then the cardinality of the possible awareness sets, $A$ for consumers is $\mathbf{2}^{\mathcal{I}}$, with cardinality $\mathbf{N} \equiv \abs{\mathbf{2}^{\mathcal{I}}} = \sum_{k=0}^{N} \dbinom{N}{k}$
 
-Then the awareness state in an industry of age $a$ is $\hat{f}(a, A) : \R^{\mathbf{N}} \to \R$, with $\sum\limits_{A \in \mathbf{2}^{\mathcal{I}}}\hat{f}(a, A) = 1$.  For the stochastic process for link formation, we assume it is Markovian, which leads to the general intensity matrix $\hat{\Q}(a,\hat{f})$ in a continuous-time Markov chain, where $\hat{f}(a) \in \R^{\mathbf{N}}$ is some ordering of the discrete states.  With this, the transition matrix can depend on both the age of the industry as well as the current distribution of awareness sets.  With this, the Kolmogorov forward equation for awareness is,
-\begin{align}
-	\D[a] \hat{f}(a) &= \hat{f}(a)\cdot\hat{\Q}(a,\hat{f})\label{eq:differentiated-LOM-nonlinear}
-\end{align}
-which is a nonlinear system of ODEs.  Except for the possibility of aggregate shocks to awareness evolution, this allows for the most general Markovian process possible--with heterogeneity along every dimension.
+Then the awareness state in an industry of age $a$ is $\hat{f}(a, A) : \R^{\mathbf{N}} \to \R$, with $\sum\limits_{A \in \mathbf{2}^{\mathcal{I}}}\hat{f}(a, A) = 1$.  To create a Markov chain for this very general process, I need to establish a consistent ordering of the states in $\hat{f}(a, A)$, which can be done with the lexicographic matrix \cref{eq:lexicographic-matrix}.  That way, $\hat{f}(a) \in \R^{\mathbf{N}}$ becomes the 
 
 \subsection{Example Stochastic Process}\label{sec:fully-differentiated-example}
 
-In this section will modify the process to allow for full differentiation of firms in the $\hat{f}(a,A)$ evolution process.  The infinitesimal generator of the Markov chain (no longer just a count process) is denoted $\hat{\Q}$, and for simplicity I assume there is no forgetting (i.e., $\mu = 0$).\footnote{  To create a Markov chain for this process, one needs to establish a consistent ordering of the states in $\hat{f}(a, A)$.  This can be done with the lexicographic matrix \cref{eq:lexicographic-matrix}.}
+In this section will modify the process to allow for full differentiation of firms in the $\hat{f}(a,A)$ evolution process.  The infinitesimal generator of the Markov chain (no longer just a count process) is denoted $\hat{\Q}$, and for simplicity I assume there is no forgetting (i.e., $\mu = 0$).
 
 \paragraph{Baseline Awareness Model With Full Differentiation}
-The following is intended to replicate the  \cref{example:bass-style} example with a model of full-differentiation.
-\begin{example}[Baseline Awareness Model With Full Differentiation]\label{example:balking-full-differentation}
-	As in \cref{example:bass-style}, assume each consumer has a $\theta > 0$ probability of becoming aware of some firm in an industry, and an equal probability of becoming aware of a particular firm (including the potential of repeating a meeting with an existing firm in there information set, which doesn't change awareness) and word of mouth diffusion.  The infinitesimal generator is $\hat{\Q}(a)\in \R^{\mathbf{N}\times\mathbf{N}}$, where the $(\iota, \iota')$ element is of the Markov process is given by
-	\begin{align}
-	\hat{\Q}_{\iota \iota'}(a) & = \begin{cases}
-	- (\theta + \theta_d(1 - \hat{f}_0(a)) & \iota' = \iota = 1\\
-	\frac{\theta + \theta_d(1 - \hat{f}_0(a))}{N}  & \iota = 1, 1 < \iota \leq N\\
-	- \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota > 1\\
-	\tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
-	0 & \ow
-	\end{cases}\label{eq:differentiated-Q-wom}\\
-	\intertext{Awareness evolves through the solution to the following system of differential equations given the initial condition $\hat{f}(0)$,}
-	\D[a] \hat{f}(a) &= \hat{f}(a)\cdot\hat{\Q}(a)\label{eq:differentiated-LOM-wom}
-	\intertext{In the case with no word-of-mouth diffusion, $\theta_d = 0$, \cref{eq:differentiated-Q-wom} simplifies to the age-invariant Markov-chain}
-	\hat{\Q}_{\iota \iota'} & = \begin{cases}
-	- \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota\\
-	\tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
-	0 & \ow
-	\end{cases}
-	\end{align}
-	and the unconditional distribution of awareness in the economy with $\theta_d = 0$ in \cref{eq:differentiated-LOM-wom} evolves from the initial condition as,
-	\begin{equation}
-	\hat{f}(a) = \hat{f}(0) \cdot e^{a \hat{\Q}}\in\R^{\mathbf{N}}
-	\end{equation}
-\end{example}
+Asume each consumer has a $\theta > 0$ probability of becoming aware of some firm in an industry, and an equal probability of becoming aware of a particular firm (including the potential of repeating a meeting with an existing firm in there information set, which doesn't change awareness) and word of mouth diffusion.  The infinitesimal generator is $\hat{\Q}(a)\in \R^{\mathbf{N}\times\mathbf{N}}$, where the $(\iota, \iota')$ element is of the Markov process is given by
+ \begin{align}
+\hat{\Q}_{\iota \iota'}(a) & = \begin{cases}
+ - (\theta + \theta_d(1 - \hat{f}_0(a)) & \iota' = \iota = 1\\
+\frac{\theta + \theta_d(1 - \hat{f}_0(a))}{N}  & \iota = 1, 1 < \iota \leq N\\
+ - \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota > 1\\
+ \tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
+0 & \ow
+\end{cases}\label{eq:differentiated-Q-wom}\\
+\intertext{Awareness evolves through the solution to the following system of differential equations given the initial condition $\hat{f}(0)$,}
+\D[a] \hat{f}(a) &= \hat{f}(a)\cdot\hat{\Q}(a)\label{eq:differentiated-LOM-wom}
+\intertext{In the case with no word-of-mouth diffusion, $\theta_d = 0$, \cref{eq:differentiated-Q-wom} simplifies to the age-invariant Markov-chain}
+\hat{\Q}_{\iota \iota'} & = \begin{cases}
+ - \theta + \tfrac{\theta}{N}\mathbf{e}_{\iota} \mathbf{L}\, \vec{\mathbf{1}}^T & \iota' = \iota\\
+ \tfrac{\theta}{N}&  (\mathbf{e}_{\iota'} - \mathbf{e}_{\iota})\mathbf{L} = 1\\
+0 & \ow
+\end{cases}
+\end{align}
+and the unconditional distribution of awareness in the economy with $\theta_d = 0$ in \cref{eq:differentiated-LOM-wom} evolves from the initial condition as,
+\begin{equation}
+\hat{f}(a) = \hat{f}(0) \cdot e^{a \hat{\Q}}\in\R^{\mathbf{N}}
+\end{equation}
 
-As previously discussed, if there is any symmetry in the set of firms, this process can be simplified substantially.  Regardless, systems of ODEs of the form \cref{eq:differentiated-LOM-wom} can be solved numerically for \textit{very} large $\mathbf{N}$ using modern techniques for solving systems of linear ODEs.
+As previously discussed, if there is any symmetry in the set of firms, this process can be simplified substantially.  Regardless, systems of ODEs of the form \cref{eq:differentiated-LOM-wom} can be solved numerically for \textit{very} large $\mathbf{N}$.
 
 \subsection{Mapping Duopoly Example to the Count Distribution}\label{sec:mapping-duopoly}
-This section takes a simple symmetric duopoly with firms $\set{1,2}$ and connects \cref{example:balking-full-differentation} with $\hat{f}(\cdot)$  and $\hat{\Q}$, to \cref{example:bass-style}  with $f(\cdot)$ and $\Q$, look at a duopoly.
+This section takes a simple symmetric duopoly with firms $\set{1,2}$ and connects \cref{example:balking-full-differentation} with $\hat{f}(\cdot)$  and $\hat{\Q}$, to Main  \cref{main:example:bass-style}  with $f(\cdot)$ and $\Q$, look at a duopoly.
 
 From \cref{example:balking-full-differentation}, the pmf is $\hat{f}(a, A)$ for $A$ accorded according to $\set{\emptyset, \set{1}, \set{2}, \set{1,2}}$, and with the infinitesimal generator,
-\begin{equation}
+$$
 \hat{\Q}(a) \equiv \begin{bmatrix}
 -(\theta + \theta_d(1 - \hat{f}_0(a))) & (\theta + \theta_d(1 - \hat{f}_0(a)))/2 & (\theta + \theta_d(1 - \hat{f}_0(a)))/2 & 0\\
 0 & -\theta/2 & 0 & \theta/2\\
 0 & 0 & -\theta/2 & \theta/2\\
 0 & 0 & 0 & 0
 \end{bmatrix}
-\end{equation}
-From these, define the count distribution as: $f_0(a) \equiv \hat{f}(a, \emptyset), f_1(a) \equiv \hat{f}(a, \set{1}) + \hat{f}(a, \set{2}),$ and $ f_2(a) \equiv \hat{f}(a, \set{1,2})$.  The generator becomes identical to  \cref{example:bass-style} with $N=2$,
-\begin{equation}
+$$
+From these, define the count distribution as: $f_0(a) \equiv \hat{f}(a, \emptyset), f_1(a) \equiv \hat{f}(a, \set{1}) + \hat{f}(a, \set{2}),$ and $ f_2(a) \equiv \hat{f}(a, \set{1,2})$.  The generator becomes identical to  Main  \cref{main:example:bass-style} with $N=2$,
+$$
 \Q(a) \equiv \begin{bmatrix}
 -(\theta + \theta_d(1 - f_0(a))) & \theta + \theta_d(1 - f_0(a))& 0\\
 0 & -\theta/2 & \theta/2\\
 0 & 0 & 0
 \end{bmatrix}
-\end{equation}
+$$
 
 \section{Symmetric Awareness Process by Cohort}\label{sec:cohort-symmetry}
 The full model for awareness in the previous 
