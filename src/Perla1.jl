@@ -1,6 +1,6 @@
 module Perla1
 
-using SparseArrays, DifferentialEquations, LinearAlgebra, ExponentialUtilities
+using SparseArrays, DifferentialEquations, LinearAlgebra, ExponentialUtilities, DiffEqOperators
 
 include("transition/model.jl")
 include("transition/get_Q.jl")

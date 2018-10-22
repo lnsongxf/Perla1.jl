@@ -1,9 +1,10 @@
-function solve_transition_dynamics(Q, f_0)
+function solve_transition_dynamics(Q, f_0, T; dt = 0.1)
     # Solve transition dynamics given AwarenessModel object Q
-    # using Krylov methods
-    function sol_krylov(t)
-        Q.t = t
-        return expv(t,Q,f_0)
-    end
-    return sol_krylov;
+
+    # generate the corresponding operator for the model
+    operator = generate_operator(Q)
+    # definte the corresponding ODE problem
+    prob = ODEProblem(operator,f_0,(0.0,T))
+    # solve the model
+    solve(prob, HochOst4(krylov=true), dt=dt)
 end

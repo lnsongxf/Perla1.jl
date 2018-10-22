@@ -2,6 +2,7 @@ name = "Perla1"
 uuid = "1ba507c4-04fb-439d-a50c-50cdde046eaf"
 
 [deps]
+DiffEqOperators = "9fdde737-9c7f-55bf-ade8-46b3f136cc48"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 ExponentialUtilities = "d4d017d3-3776-5f7e-afef-a10c40355c18"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
