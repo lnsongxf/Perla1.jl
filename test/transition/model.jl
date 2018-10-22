@@ -4,10 +4,10 @@
     μ = 0.0
     θ = 0.06 # baseline parameter from Perla16 (Appendix E.4)
     θ_d = 0.0 # time-invariant transition matrix
-    f0 = 0.5 # time-invariant transition matrix
+    f0(a) = 0.5 # time-invariant transition matrix
 
     @testset "Check if duopoly model is valid" begin
-        Q_expected = [-(θ + θ_d*(1-f0)) (θ + θ_d*(1-f0)) 0.0; 0.0 -θ/2 θ/2; 0.0 0.0 0.0]
+        Q_expected = [-(θ + θ_d*(1-f0(0.0))) (θ + θ_d*(1-f0(0.0))) 0.0; 0.0 -θ/2 θ/2; 0.0 0.0 0.0]
 
         model_generated = AwarenessModel(N, μ, θ, θ_d, f0)
 

@@ -1,4 +1,4 @@
-struct AwarenessModel 
+mutable struct AwarenessModel 
     # ==================================
     # params for awareness process
     # ==================================
@@ -6,7 +6,7 @@ struct AwarenessModel
     μ
     θ
     θ_d    
-    f0 # time-invariant f0
+    f0::Function
 
     # ==================================
     # transition generator info
@@ -16,11 +16,19 @@ struct AwarenessModel
     du # upper diagonal elements of Q
 
     # ==================================
+    # time dependency
+    # ==================================
+    t::Float64 # time
+    # ==================================
     # constructor
     # ==================================
     function AwarenessModel(N, μ, θ, θ_d, f0)
         dl, d, du = get_Q_base(N, μ, θ)
-        new(N, μ, θ, θ_d, f0, dl, d, du)
+        new(N, μ, θ, θ_d, f0, dl, d, du, 0.0)
+    end
+    function AwarenessModel(N, μ, θ, θ_d, f0, t)
+        dl, d, du = get_Q_base(N, μ, θ)
+        new(N, μ, θ, θ_d, f0, dl, d, du, t)
     end
 end
 
@@ -31,11 +39,11 @@ LinearAlgebra.ishermitian(Q::AwarenessModel) = false
 function LinearAlgebra.mul!(y, Q::AwarenessModel, b)
     # note that the operator is transposed
     N = Q.N
-    y[1] = -(Q.θ + Q.θ_d*(1-Q.f0))*b[1]+Q.dl[1]*b[2]
+    y[1] = -(Q.θ + Q.θ_d*(1-Q.f0(Q.t)))*b[1]+Q.dl[1]*b[2]
     for i in 2:N
         y[i] = Q.du[i-1]*b[i-1] + Q.d[i]*b[i] + Q.dl[i]*b[i+1]
     end
-    y[2] = (Q.θ + Q.θ_d*(1-Q.f0))*b[1]+Q.d[2]*b[2]+Q.dl[2]*b[3]
+    y[2] = (Q.θ + Q.θ_d*(1-Q.f0(Q.t)))*b[1]+Q.d[2]*b[2]+Q.dl[2]*b[3]
     y[end] = Q.du[end]*b[N] + Q.d[end]*b[N+1]
 end
 
@@ -56,6 +64,6 @@ function LinearAlgebra.opnorm(Q::AwarenessModel, p)
     # Hence, sufficient to consider max of the first two rows
     # [[-(θ + θ_d*(1-f0)) μ];
     # [(θ + θ_d*(1-f0)) -μ-(N-1)*θ/N]]
-    ii = abs(Q.θ + Q.θ_d*(1-Q.f0))
+    ii = abs(Q.θ + Q.θ_d*(1-Q.f0(Q.t)))
     return (max(ii + Q.μ, ii + Q.μ + (Q.N-1)*Q.θ/Q.N))
 end

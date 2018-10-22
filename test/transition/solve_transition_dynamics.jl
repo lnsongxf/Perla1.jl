@@ -7,7 +7,7 @@
     μ = 0.0
     θ = 0.06 # baseline parameter from Perla16 (Appendix E.4)
     θ_d = 0.0 # time-invariant transition matrix
-    f0 = 0.5 # time-invariant transition matrix
+    f0(a) = 0.5 # time-invariant f0
     # θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
 
     # time values to be evaluated on for testing
@@ -21,11 +21,14 @@
         dl = fill(μ, N)
         d = collect(-μ.-(N:-1:0).*(θ/N))
         du = collect((N:-1:1).*(θ/N))
-        Q = LinearAlgebra.Tridiagonal(dl,d,du)
-    
-        Q[1,1] = -(θ + θ_d*(1-f0))
-        Q[1,2] = θ + θ_d*(1-f0)
+        Q_basis = LinearAlgebra.Tridiagonal(dl,d,du)
         
+        function Q(a)
+            Q_basis[1,1] = -(θ + θ_d*(1-f0(a)))
+            Q_basis[1,2] = θ + θ_d*(1-f0(a))
+            return Q_basis
+        end 
+
         return Q
     end
 
@@ -35,7 +38,7 @@
         # Q; N by N matrix generator
         # f_0; N vector of initial distribution
         # T; Float64 terminal time
-        df(f,p,a) = Q_matrix' * f
+        df(f,p,a) = Q_matrix(a)' * f
         prob = DifferentialEquations.ODEProblem(df,f_0,(0.0,T))
         return solve(prob);
     end
