@@ -6,9 +6,9 @@
     T = 100.0
     μ = 0.0
     θ = 0.06 # baseline parameter from Perla16 (Appendix E.4)
-    θ_d = 0.0 # time-invariant transition matrix
+    θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
     f0(a) = 0.5 # time-invariant f0
-    # θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
+    f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
 
     # time values to be evaluated on for testing
     ts = range(0.0, stop = T, length = 50)
@@ -64,7 +64,14 @@
         @test all(diff(f_count.(ts)) .> 0)
 
         # check if solutions are close to the ones based on matrix
-        @test f_count.(0:0.1:T) ≈ f_count_matrix.(0:0.1:T) atol=1e-4
+        # (if Q is time-variant there are numerical errors, be more generous)
+        f0s = (Q.f0).(ts)
+        is_Q_time_variant = any(y -> y != first(f0s), f0s)
+        if (is_Q_time_variant)
+            @test f_count.(0:0.1:T) ≈ f_count_matrix.(0:0.1:T) atol=1e+1
+        else
+            @test f_count.(0:0.1:T) ≈ f_count_matrix.(0:0.1:T) atol=1e-4
+        end
     end
 
     # ===================================================================
@@ -81,7 +88,7 @@
         sanity_check_dynamics(Q, f_0)
     end
 
-    @testset "duopoly, time-variant Q, some firms recognized first" begin
+    @testset "duopoly, time-invariant Q, some firms recognized first" begin
         # define generator
         Q = AwarenessModel(N, μ, θ, θ_d, f0)
 
@@ -92,11 +99,47 @@
         sanity_check_dynamics(Q, f_0)
     end
 
+    @testset "duopoly, time-variant Q" begin
+        # define generator
+        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
+
+        # definte initial dist.
+        f_0 = [1.0; fill(0.0, N)]
+
+        # perform sanity check
+        sanity_check_dynamics(Q, f_0)
+    end
+
+    @testset "duopoly, time-variant Q, some firms recognized first" begin
+        # define generator
+        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
+
+        # definte initial dist.
+        f_0 = [0.5; fill((1.0-0.5)/N, N)]
+
+        # perform sanity check
+        sanity_check_dynamics(Q, f_0)
+    end
+
+
     @testset "10 firms, time-invariant Q" begin
         N = 10 # 100 firms
 
         # define generator
         Q = AwarenessModel(N, μ, θ, θ_d, f0)
+
+        # definte initial dist.
+        f_0 = [1.0; fill(0.0, N)]
+
+        # perform sanity check
+        sanity_check_dynamics(Q, f_0)
+    end
+
+    @testset "10 firms, time-invariant Q" begin
+        N = 10 # 100 firms
+
+        # define generator
+        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
