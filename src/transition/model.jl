@@ -67,3 +67,14 @@ function LinearAlgebra.opnorm(Q::AwarenessModel, p)
     ii = abs(Q.θ + Q.θ_d*(1-Q.f0(Q.t)))
     return (max(ii + Q.μ, ii + Q.μ + (Q.N-1)*Q.θ/Q.N))
 end
+
+# return corresponding operator for ODE solvers
+function generate_operator(Q::AwarenessModel) 
+    function awareness_operator_basis(df,f,p,t)
+        Q.t = t
+        mul!(df, Q, f)
+    end
+    operator = MatrixFreeOperator(awareness_operator_basis, (1,1)) # extra argument p=(1,1) is dummy
+    return operator
+end
+DiffEqBase.isinplace(::MatrixFreeOperator, num) = true
