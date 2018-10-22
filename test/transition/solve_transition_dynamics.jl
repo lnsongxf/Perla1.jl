@@ -46,7 +46,7 @@
     # perform sanity check
     function sanity_check_dynamics(Q, f_0) 
         # solve dynamics
-        sol_count = solve_transition_dynamics(Q, f_0)
+        sol_count = solve_transition_dynamics(Q, f_0, T)
 
         # solve dynamics, using matrix for benchmark
         Q_matrix = get_Q_matrix(Q.N, Q.μ, Q.θ, Q.θ_d, Q.f0)
