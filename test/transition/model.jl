@@ -10,16 +10,31 @@
     # base parameters
     params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
 
-    # time-variant dynamics
+    # time-variant dynamics, with single cohort
     function Q_a!(df, f, p, t)
         @unpack μ, θ, θ_d, f0, cohorts = p
-        N = cohorts[1]
+        N_1 = cohorts[1]
+        e_1 = CartesianIndex((1,))
+        current_cohort = 1 # single cohort case
+
+        f = reshape(f, (cohorts.+1))
+        df = reshape(df, (cohorts.+1))
+
         df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
-        for i in 2:N
-            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        for i in CartesianIndices(f)
+            if (i[current_cohort] > 1 && i[current_cohort] <= N_1)
+                i_previous = i - e_1
+                i_forward = i + e_1
+                df[i] = θ*((N+2-i[current_cohort])/N)*f[i_previous] - 
+                        (μ+θ*((N+1-i[current_cohort])/N))*f[i] + 
+                        μ*f[i_forward]
+            end
         end
         df[2] = (θ + θ_d*(1-f0(t)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
         df[end] = (θ/N)*f[N] - μ*f[N+1]
+
+        f = reshape(f, (N_1+1,))   
+        df = reshape(df, (N_1+1,))
     end
 
     # helper function to apply dynamics per column
