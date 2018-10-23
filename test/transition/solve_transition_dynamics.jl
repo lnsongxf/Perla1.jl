@@ -40,7 +40,8 @@
     # functions for sanity check
     # ===================================================================
     # get Q in matrix form for sanity check
-    function get_Q_matrix(N, μ, θ, θ_d, f0)
+    function get_Q_matrix(params)
+        N, μ, θ, θ_d, f0 = params
         dl = fill(μ, N)
         d = collect(-μ.-(N:-1:0).*(θ/N))
         du = collect((N:-1:1).*(θ/N))
@@ -72,7 +73,7 @@
         sol_count = solve_transition_dynamics(Q, params, f_0, T)
 
         # solve dynamics, using matrix for benchmark
-        Q_matrix = get_Q_matrix(params.N, params.μ, params.θ, params.θ_d, params.f0)
+        Q_matrix = get_Q_matrix(params)
         sol_count_matrix = solve_transition_dynamics_matrix(Q_matrix, f_0, T)
         
         # average product awareness
