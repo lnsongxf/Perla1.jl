@@ -15,14 +15,7 @@
 
     # time-invariant dynamics
     function Q_0!(df, f, p, t)
-        @unpack μ, θ, θ_d, f0, cohorts = p
-        N = cohorts[1]
-        df[1] = -(θ + θ_d*(1-f0(0.0)))*f[1] + μ*f[2]
-        for i in 2:N
-            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
-        end
-        df[2] = (θ + θ_d*(1-f0(0.0)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
-        df[end] = (θ/N)*f[N] - μ*f[N+1]
+        Q_a!(df, f, p, 0.0)
     end
 
     # time-variant dynamics
