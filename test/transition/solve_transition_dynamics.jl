@@ -9,7 +9,29 @@
     θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
     f0(a) = 0.5 # time-invariant f0
     f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
-    params = (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # TODO: later add this to unit tests
+    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+
+    # time-invariant dynamics
+    function Q_0!(df, f, p, t)
+        @unpack N, μ, θ, θ_d, f0 = p
+        df[1] = -(θ + θ_d*(1-f0(0.0)))*f[1] + μ*f[2]
+        for i in 2:N
+            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        end
+        df[2] = (θ + θ_d*(1-f0(0.0)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
+        df[end] = (θ/N)*f[N] - μ*f[N+1]
+    end
+
+    # time-variant dynamics
+    function Q_a!(df, f, p, t)
+        @unpack N, μ, θ, θ_d, f0 = p
+        df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
+        for i in 2:N
+            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        end
+        df[2] = (θ + θ_d*(1-f0(t)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
+        df[end] = (θ/N)*f[N] - μ*f[N+1]
+    end
 
     # time values to be evaluated on for testing
     ts = range(0.0, stop = T, length = 50)
@@ -45,12 +67,12 @@
     end
 
     # perform sanity check
-    function sanity_check_dynamics(Q, f_0) 
+    function sanity_check_dynamics(Q, params, f_0) 
         # solve dynamics
-        sol_count = solve_transition_dynamics(Q, f_0, T)
+        sol_count = solve_transition_dynamics(Q, params, f_0, T)
 
         # solve dynamics, using matrix for benchmark
-        Q_matrix = get_Q_matrix(Q.N, Q.μ, Q.θ, Q.θ_d, Q.f0)
+        Q_matrix = get_Q_matrix(params.N, params.μ, params.θ, params.θ_d, params.f0)
         sol_count_matrix = solve_transition_dynamics_matrix(Q_matrix, f_0, T)
         
         # average product awareness
@@ -66,7 +88,7 @@
 
         # check if solutions are close to the ones based on matrix
         # (if Q is time-variant there are numerical errors, be more generous)
-        f0s = (Q.f0).(ts)
+        f0s = (params.f0).(ts)
         is_Q_time_variant = any(y -> y != first(f0s), f0s)
         if (is_Q_time_variant)
             @test f_count.(0:0.1:T) ≈ f_count_matrix.(0:0.1:T) atol=1e+1
@@ -80,46 +102,45 @@
     # ===================================================================
     @testset "duopoly, time-invariant Q" begin
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
     @testset "duopoly, time-invariant Q, some firms recognized first" begin
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
     @testset "duopoly, time-variant Q" begin
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_a!, params, f_0)
     end
 
     @testset "duopoly, time-variant Q, some firms recognized first" begin
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
-
+        params = params_base(N = N)
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_a!, params, f_0)
     end
 
 
@@ -127,39 +148,39 @@
         N = 10 # 100 firms
 
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
     @testset "10 firms, time-invariant Q" begin
         N = 10 # 100 firms
 
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0_a)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
     @testset "50 firms, time-invariant Q" begin
         N = 50 # 50 firms
 
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
 
@@ -167,25 +188,25 @@
         N = 100 # 100 firms
 
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 
     @testset "500 firms, time-invariant Q, some firms recognized first" begin
         N = 500
 
         # define generator
-        Q = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
 
         # perform sanity check
-        sanity_check_dynamics(Q, f_0)
+        sanity_check_dynamics(Q_0!, params, f_0)
     end
 end

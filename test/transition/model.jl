@@ -6,26 +6,39 @@
     θ_d = 0.0 # time-invariant transition matrix
     f0(a) = 0.5 # time-invariant transition matrix
 
-    function LinearAlgebra.mul!(Y, Q::AwarenessModel, B::AbstractMatrix{T}, t) where {T}
-        N = Q.N
+    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+
+    # time-variant dynamics
+    function Q_a!(df, f, p, t)
+        @unpack N, μ, θ, θ_d, f0 = p
+        df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
+        for i in 2:N
+            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        end
+        df[2] = (θ + θ_d*(1-f0(t)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
+        df[end] = (θ/N)*f[N] - μ*f[N+1]
+    end
+
+    # helper function to apply dynamics per column
+    function dynamics_by_col(Y, Q!, B::AbstractMatrix{T}, p, t) where {T}
+        N = p.N
         for j in 1:(N+1)
             y = Y[:,j]
-            mul!(y, Q, B[:,j],t)
+            Q!(y, B[:,j], p, t)
             Y[:,j] = y
         end
     end
 
     @testset "Check if duopoly model is valid" begin
+        params = params_base()
         t = 0.0 # check on t = 0.0
         Q_expected = [-(θ + θ_d*(1-f0(t))) (θ + θ_d*(1-f0(t))) 0.0; 0.0 -θ/2 θ/2; 0.0 0.0 0.0]
-
-        model_generated = AwarenessModel(N, μ, θ, θ_d, f0)
 
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         expected = copy(eyes)
         generated = copy(eyes)
         LinearAlgebra.mul!(expected, Q_expected', eyes)
-        LinearAlgebra.mul!(generated, model_generated, eyes, t)
+        dynamics_by_col(generated, Q_a!, eyes, params, t)
         @test expected == generated
     end
 
@@ -36,10 +49,10 @@
 
         # for N = 10
         N = 10
-        model_generated = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N)
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
-        LinearAlgebra.mul!(generated, model_generated, eyes, t)
+        dynamics_by_col(generated, Q_a!, eyes, params, t)
         for i in 1:(N+1)  # all column sums should be zero
             @test sum(generated[:,i]) ≈ 0.0 atol = 1e-8
         end
@@ -47,10 +60,10 @@
         # for N = 20, with non-zero θ_d
         N = 20
         θ_d = 0.15
-        model_generated = AwarenessModel(N, μ, θ, θ_d, f0)
+        params = params_base(N = N, θ_d = θ_d)
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
-        LinearAlgebra.mul!(generated, model_generated, eyes, t)
+        dynamics_by_col(generated, Q_a!, eyes, params, t)
         for i in 1:(N+1)  # all column sums should be zero
             @test sum(generated[:,i]) ≈ 0.0 atol = 1e-8
         end
