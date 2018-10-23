@@ -29,7 +29,9 @@
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         LinearAlgebra.mul!(generated, model_generated, eyes)
-        @test all(sum(generated, dims = 1) .≈ 0.0) # all column sums should be one
+        for i in 1:(N+1)  # all column sums should be zero
+            @test sum(generated[:,i]) ≈ 0.0 atol = 1e-8
+        end
 
         # for N = 20, with non-zero θ_d
         N = 20
@@ -38,6 +40,8 @@
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         LinearAlgebra.mul!(generated, model_generated, eyes)
-        @test all(sum(generated, dims = 1) .≈ 0.0) # all column sums should be one
+        for i in 1:(N+1)  # all column sums should be zero
+            @test sum(generated[:,i]) ≈ 0.0 atol = 1e-8
+        end
     end
 end
