@@ -9,6 +9,7 @@
     θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
     f0(a) = 0.5 # time-invariant f0
     f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
+    params = (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # TODO: later add this to unit tests
 
     # time values to be evaluated on for testing
     ts = range(0.0, stop = T, length = 50)
