@@ -6,11 +6,14 @@
     θ_d = 0.0 # time-invariant transition matrix
     f0(a) = 0.5 # time-invariant transition matrix
 
-    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+    cohorts = (N, )
+    # base parameters
+    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
 
     # time-variant dynamics
     function Q_a!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
+        @unpack μ, θ, θ_d, f0, cohorts = p
+        N = cohorts[1]
         df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
         for i in 2:N
             df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
@@ -21,7 +24,7 @@
 
     # helper function to apply dynamics per column
     function dynamics_by_col(Y, Q!, B::AbstractMatrix{T}, p, t) where {T}
-        N = p.N
+        N = p.cohorts[1]
         for j in 1:(N+1)
             y = Y[:,j]
             Q!(y, B[:,j], p, t)
@@ -49,7 +52,7 @@
 
         # for N = 10
         N = 10
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         dynamics_by_col(generated, Q_a!, eyes, params, t)
@@ -60,7 +63,7 @@
         # for N = 20, with non-zero θ_d
         N = 20
         θ_d = 0.15
-        params = params_base(N = N, θ_d = θ_d)
+        params = params_base(cohorts = (N, ), θ_d = θ_d)
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         dynamics_by_col(generated, Q_a!, eyes, params, t)

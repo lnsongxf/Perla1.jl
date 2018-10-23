@@ -9,11 +9,14 @@
     θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
     f0(a) = 0.5 # time-invariant f0
     f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
-    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+    cohorts = (N, )
+    # base parameters
+    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
 
     # time-invariant dynamics
     function Q_0!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
+        @unpack μ, θ, θ_d, f0, cohorts = p
+        N = cohorts[1]
         df[1] = -(θ + θ_d*(1-f0(0.0)))*f[1] + μ*f[2]
         for i in 2:N
             df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
@@ -24,7 +27,8 @@
 
     # time-variant dynamics
     function Q_a!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
+        @unpack μ, θ, θ_d, f0, cohorts = p
+        N = cohorts[1]
         df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
         for i in 2:N
             df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
@@ -41,7 +45,8 @@
     # ===================================================================
     # get Q in matrix form for sanity check
     function get_Q_matrix(params)
-        N, μ, θ, θ_d, f0 = params
+        μ, θ, θ_d, f0, cohorts = params
+        N = cohorts[1]
         dl = fill(μ, N)
         d = collect(-μ.-(N:-1:0).*(θ/N))
         du = collect((N:-1:1).*(θ/N))
@@ -103,7 +108,7 @@
     # ===================================================================
     @testset "duopoly, time-invariant Q" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -114,7 +119,7 @@
 
     @testset "duopoly, time-invariant Q, some firms recognized first" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
@@ -125,7 +130,7 @@
 
     @testset "duopoly, time-variant Q" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -136,7 +141,7 @@
 
     @testset "duopoly, time-variant Q, some firms recognized first" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
 
@@ -149,7 +154,7 @@
         N = 10 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -162,7 +167,7 @@
         N = 10 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -175,7 +180,7 @@
         N = 50 # 50 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -189,7 +194,7 @@
         N = 100 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -202,7 +207,7 @@
         N = 500
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
