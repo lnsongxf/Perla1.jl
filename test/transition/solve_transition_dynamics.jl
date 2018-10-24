@@ -9,28 +9,40 @@
     θ_d = 0.21 # baseline parameter from Perla16 (Appendix E.4)
     f0(a) = 0.5 # time-invariant f0
     f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
-    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+    cohorts = (N, )
+    # base parameters
+    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
 
-    # time-invariant dynamics
+    # time-invariant dynamics, with single cohort
     function Q_0!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
-        df[1] = -(θ + θ_d*(1-f0(0.0)))*f[1] + μ*f[2]
-        for i in 2:N
-            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
-        end
-        df[2] = (θ + θ_d*(1-f0(0.0)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
-        df[end] = (θ/N)*f[N] - μ*f[N+1]
+        Q_a!(df, f, p, 0.0)
     end
 
-    # time-variant dynamics
+    # time-variant dynamics, with single cohort
     function Q_a!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
+        @unpack μ, θ, θ_d, f0, cohorts = p
+        N_1 = cohorts[1]
+        e_1 = CartesianIndex((1,))
+        current_cohort = 1 # single cohort case
+
+        f = reshape(f, (cohorts.+1))
+        df = reshape(df, (cohorts.+1))
+
         df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
-        for i in 2:N
-            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        for i in CartesianIndices(f)
+            if (i[current_cohort] > 1 && i[current_cohort] <= N_1)
+                i_previous = i - e_1
+                i_forward = i + e_1
+                df[i] = θ*((N+2-i[current_cohort])/N)*f[i_previous] - 
+                        (μ+θ*((N+1-i[current_cohort])/N))*f[i] + 
+                        μ*f[i_forward]
+            end
         end
         df[2] = (θ + θ_d*(1-f0(t)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
         df[end] = (θ/N)*f[N] - μ*f[N+1]
+
+        f = reshape(f, (N_1+1,))   
+        df = reshape(df, (N_1+1,))
     end
 
     # time values to be evaluated on for testing
@@ -40,7 +52,9 @@
     # functions for sanity check
     # ===================================================================
     # get Q in matrix form for sanity check
-    function get_Q_matrix(N, μ, θ, θ_d, f0)
+    function get_Q_matrix(params)
+        μ, θ, θ_d, f0, cohorts = params
+        N = cohorts[1]
         dl = fill(μ, N)
         d = collect(-μ.-(N:-1:0).*(θ/N))
         du = collect((N:-1:1).*(θ/N))
@@ -72,7 +86,7 @@
         sol_count = solve_transition_dynamics(Q, params, f_0, T)
 
         # solve dynamics, using matrix for benchmark
-        Q_matrix = get_Q_matrix(params.N, params.μ, params.θ, params.θ_d, params.f0)
+        Q_matrix = get_Q_matrix(params)
         sol_count_matrix = solve_transition_dynamics_matrix(Q_matrix, f_0, T)
         
         # average product awareness
@@ -102,7 +116,7 @@
     # ===================================================================
     @testset "duopoly, time-invariant Q" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -113,7 +127,7 @@
 
     @testset "duopoly, time-invariant Q, some firms recognized first" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
@@ -124,7 +138,7 @@
 
     @testset "duopoly, time-variant Q" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -135,7 +149,7 @@
 
     @testset "duopoly, time-variant Q, some firms recognized first" begin
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]
 
@@ -148,7 +162,7 @@
         N = 10 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -161,7 +175,7 @@
         N = 10 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -174,7 +188,7 @@
         N = 50 # 50 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -188,7 +202,7 @@
         N = 100 # 100 firms
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [1.0; fill(0.0, N)]
@@ -201,7 +215,7 @@
         N = 500
 
         # define generator
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
 
         # definte initial dist.
         f_0 = [0.5; fill((1.0-0.5)/N, N)]

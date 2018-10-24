@@ -6,22 +6,40 @@
     θ_d = 0.0 # time-invariant transition matrix
     f0(a) = 0.5 # time-invariant transition matrix
 
-    params_base = @with_kw (N = N, μ = μ, θ = θ, θ_d = θ_d, f0 = f0) # base parameters
+    cohorts = (N, )
+    # base parameters
+    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
 
-    # time-variant dynamics
+    # time-variant dynamics, with single cohort
     function Q_a!(df, f, p, t)
-        @unpack N, μ, θ, θ_d, f0 = p
+        @unpack μ, θ, θ_d, f0, cohorts = p
+        N_1 = cohorts[1]
+        e_1 = CartesianIndex((1,))
+        current_cohort = 1 # single cohort case
+
+        f = reshape(f, (cohorts.+1))
+        df = reshape(df, (cohorts.+1))
+
         df[1] = -(θ + θ_d*(1-f0(t)))*f[1] + μ*f[2]
-        for i in 2:N
-            df[i] = θ*((N+2-i)/N)*f[i-1] - (μ+θ*((N+1-i)/N))*f[i] + μ*f[i+1]
+        for i in CartesianIndices(f)
+            if (i[current_cohort] > 1 && i[current_cohort] <= N_1)
+                i_previous = i - e_1
+                i_forward = i + e_1
+                df[i] = θ*((N+2-i[current_cohort])/N)*f[i_previous] - 
+                        (μ+θ*((N+1-i[current_cohort])/N))*f[i] + 
+                        μ*f[i_forward]
+            end
         end
         df[2] = (θ + θ_d*(1-f0(t)))*f[1] - (μ+θ*((N-1)/N))*f[2] + μ*f[3]
         df[end] = (θ/N)*f[N] - μ*f[N+1]
+
+        f = reshape(f, (N_1+1,))   
+        df = reshape(df, (N_1+1,))
     end
 
     # helper function to apply dynamics per column
     function dynamics_by_col(Y, Q!, B::AbstractMatrix{T}, p, t) where {T}
-        N = p.N
+        N = p.cohorts[1]
         for j in 1:(N+1)
             y = Y[:,j]
             Q!(y, B[:,j], p, t)
@@ -49,7 +67,7 @@
 
         # for N = 10
         N = 10
-        params = params_base(N = N)
+        params = params_base(cohorts = (N, ))
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         dynamics_by_col(generated, Q_a!, eyes, params, t)
@@ -60,7 +78,7 @@
         # for N = 20, with non-zero θ_d
         N = 20
         θ_d = 0.15
-        params = params_base(N = N, θ_d = θ_d)
+        params = params_base(cohorts = (N, ), θ_d = θ_d)
         eyes = LinearAlgebra.Matrix{Float64}(I, N+1, N+1)
         generated = copy(eyes)
         dynamics_by_col(generated, Q_a!, eyes, params, t)
