@@ -82,6 +82,32 @@ Online Computational  Appendix
 \makeatother
 \numberwithin{equation}{section}
 
+\section{Multiple Cohorts and Awareness Counts}\label{sec:cohort-notation}
+To introduce multiple cohorts,
+\begin{itemize}
+	\item Cohorts are indexed by $ b = 1, \ldots \bar{b}$ where the symmetric case in the paper is nested with $\bar{b} = 1$
+	\item Let $a_b$ be the industry age at birth for cohort $b$.  Typically, $a_1 = 0$ since the industry starts with the first cohort.
+	\item There are $N_b$ firms in cohort $b$, but in the symmetric case with the same number of firms per cohort we will just use $N$
+	\item Given symmetric awareness evolution within a cohort, denote the set of possible awareness set counts as $\mathcal{N}$ and the cardinality of the set of awareness sets is then
+	\begin{align}
+	\mathbf{N} &\equiv \abs{\mathcal{N}} = \prod_{b = 1}^{\bar{b}}(N_b + 1)
+	\end{align}
+	\item In the example of cohorts of the same size, $\mathcal{N} \equiv \set{0, 1,\ldots N}^{\bar{b}}$
+	\item We can use $n_b \in \set{0, \ldots, N_b}$ to be an awareness set with $n_b$ firms in the awareness set size for cohort $b$.  This is a generalization of the $n$ used with a single cohort.	
+	\item The awareness state for an industry is $f(a) \in \R^{\mathbf{N}}$, which generalizes the one-cohort example in the main paper.
+	\item An element from the $\mathbf{N}$ possible awareness sets is a $n \in \mathcal{N}$
+	\begin{align}
+	n &\equiv \set{n_1, \ldots n_b, \ldots n_{\bar{b}}}
+	\end{align}
+	\item Denote a sum over all possible awareness count permutations as $\sum_{n \in \mathcal{N}}$, etc.
+\end{itemize}
+Generalizing the awareness count evolution, we now have a infinitesimal generator $Q \in \R^{\mathbf{N} \times\mathbf{N}}$ such that the evolution of awareness is
+\begin{align}
+\D[t]f(a) &= f(a) \cdot Q(a, f)
+\end{align}
+Which nests the single-cohort case and can potentially be nonlinear or time-inhomogenous
+
+
 \section{Model of Awareness in Main Paper}
 The following summarizes the law of motion for the main paper, which uses the count of firms in the awareness sets
 \begin{align}
@@ -196,6 +222,7 @@ The full model for awareness in the previous
 
 
 \section{Profits and Prices}
+
 Define,
 \begin{align}
 	\bar{\Gamma} &\equiv \Gamma(1-\sigma(\kappa-1))^{1/(1-\kappa)}
@@ -203,9 +230,22 @@ Define,
 	0 &< \sigma < \frac{1}{\kappa - 1}
 \end{align}
 Total Demand in an industry of age $a$ with firms of quality $q_i$ choosing prices $p_i$ is
-\begin{equation}
-y_i(a,p) = \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{\kappa - 1}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{q_i}{q_{i'}} p_{i'}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand}
-\end{equation}
+\begin{align}
+y_i(a,p) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{\kappa - 1}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{q_i}{q_{i'}} p_{i'}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\\
+&= \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{i'}}{q_{i'}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand}
+\end{align}
+\textbf{TODO:} CY: Check this simplification.  I may have gotten the $q_i$ exponent wrong, for example.  But I think this is the right one to start working with.  There also may be a better way to group the $q_i$ and $p_i$
+
+\subsection{Demand with Multiple Cohorts of Symmetric Quality}
+Using the notation in \cref{sec:cohort-notation}, denote the quality and price of all forms in cohort $b$ as $q_b$ and $p_b$.  For deriving the demand, we will consider firm $i$ in cohort $b$ as having price $i$, so that the demand function is
+\begin{align}
+y_{ib}(p_i, p_{-i}, f) &= ...
+\end{align}
+Here we drop the $a$ since the $f$ vector provides the sufficient information to calculate demand and prices
+
+
+\textbf{TODO} Take \cref{eq:full-total-demand} and walk through the steps to simplify it using the notation in that section.  Denote a particular firm $i$
+
 
 \section{General Notation}
 This section establishes some general notation used in the solutions.
