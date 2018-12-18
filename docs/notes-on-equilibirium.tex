@@ -167,20 +167,20 @@ $$
 is identical with $p ^{-1/\sigma} + (n-1) \overline{p}^{-1/\sigma}$ by symmetry. The result follows with simple algebra.
 
 \section{Equilibrium with asymmetric cohorts}
-Let $K > 1$ be the number of cohorts, and assume that all cohorts have the same number of firms belong to each, $N$. Assume that there is a quality difference across cohort $q_{k}$, while keeping the awareness transition dynamics symmetric.  Since we have multiple cohorts, we introduce a $K-$length random vector $\widehat n_K$ whose $k$th element represents the number of firms awared in $k$th cohort, whose support is $\{0, 1,..., N\}$. Let $N_K$ be the support of $\widehat  n_K$, whose size is $(N+1)^K$.  For any $n_K \in N_K$, let $s(n_K)$ be defined as the elementwise sum of $n_K$ and let $n_K^k$ denote the $k$th element of $n_K$.
+Let $K > 1$ be the number of cohorts, and assume that all cohorts have the same number of firms belong to each, $N$. Assume that there is a quality difference across cohort $q_{b}$, while keeping the awareness transition dynamics symmetric. Let $\mathbf{N}$ be the support of $  n$, whose size is $(N+1)^K$.
 
-Note that, conditional on $n^k_K > 0$, the probability of a $k$-cohort firm being included in the $n^k_K$ awared firms out of total $N$ firms is $n^k_K/N$ (Porya urn). By (3) in paper, the expectation term in \autoref{eq:total-demand-general} can be written in terms of cross-cohort awareness counts as
+Note that, conditional on $n_b > 0$, the probability of a $b$-cohort firm being included in the $n_b$ awared firms out of total $N$ firms is $n_b /N$ (Porya urn). By (3) in paper, the expectation term in \autoref{eq:total-demand-general} can be written in terms of cross-cohort awareness counts as
 \begin{equation}
 \begin{aligned}
-y_{ik}(a, p_i, p_{-i}) &=  \overline{\Gamma}^{1 - \kappa} \Omega q_k^{\kappa-1} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot \\ 
-&\sum_{ n_K \in N_K } n^k_K f_{n_K}(a) \Bigg[ \sum_{k' =1 }^K n_K^{k'} \left( \dfrac{q_k}{q_{k'}} p_{k'} \right)^{-1/\sigma} +   
- p_i^{-1/\sigma}   - p^{-1/\sigma}_{k}  \Bigg]^{\sigma(\kappa-1) -1}  \\ 
- &=  \overline{\Gamma}^{1 - \kappa} \Omega q_k^{1/\sigma} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot \\ 
- &\sum_{ n_K \in N_K } n^k_K f_{n_K}(a) \Bigg[ \sum_{k' =1 }^K n_K^{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
- p_i^{-1/\sigma}   - p^{-1/\sigma}_{k}  \Bigg]^{\sigma(\kappa-1) -1}
+y_{ib}(a, p_i, p_{-i}) &=  \overline{\Gamma}^{1 - \kappa} \Omega q_b^{\kappa-1} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot \\ 
+&\sum_{ n \in \mathbf{N} } n_b f_{n}(a) \Bigg[ \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{q_b}{q_{b'}} p_{b'} \right)^{-1/\sigma} +   
+ p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}  \Bigg]^{\sigma(\kappa-1) -1}  \\ 
+&=  \overline{\Gamma}^{1 - \kappa} \Omega q_b^{1/\sigma} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot \\ 
+ &\sum_{ n \in \mathbf{N} } n_b f_n(a) \Bigg[ \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+ p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}  \Bigg]^{\sigma(\kappa-1) -1}
 \end{aligned}
 \end{equation}
-for firm $i$ on $k$th cohort. It is worth mentioning that the normalization as in \autoref{eq:total-demand-general-simple} is not possible if $q_k$ is different across cohorts  since $\overline{\Gamma}^{1-\kappa}  q_k^{\kappa-1} q_k^{1/\sigma}$ is not constant.
+for firm $i$ on $b$th cohort. It is worth mentioning that the normalization as in \autoref{eq:total-demand-general-simple} is not possible if $q_b$ is different across cohorts  since $\overline{\Gamma}^{1-\kappa}  q_b^{\kappa-1} q_b^{1/\sigma}$ is not constant.
 
 
 \end{document}
