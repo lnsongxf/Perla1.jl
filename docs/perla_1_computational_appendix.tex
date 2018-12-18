@@ -234,18 +234,42 @@ Total Demand in an industry of age $a$ with firms of quality $q_i$ choosing pric
 y_i(a,p) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{\kappa - 1}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{q_i}{q_{i'}} p_{i'}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\\
 &= \bar{\Gamma}^{1-\kappa}\Omega \, q_i^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{i'}}{q_{i'}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand}
 \end{align}
-\textbf{TODO:} CY: Check this simplification.  I may have gotten the $q_i$ exponent wrong, for example.  But I think this is the right one to start working with.  There also may be a better way to group the $q_i$ and $p_i$
 
 \subsection{Demand with Multiple Cohorts of Symmetric Quality}
 Using the notation in \cref{sec:cohort-notation}, denote the quality and price of all forms in cohort $b$ as $q_b$ and $p_b$.  For deriving the demand, we will consider firm $i$ in cohort $b$ as having price $i$, so that the demand function is
 \begin{align}
-y_{ib}(p_i, p_{-i}, f) &= ...
+y_{ib}(p_i, p_{-i}, f) &= \sum_{ n \in \mathcal{N} } n_b f_n \Bigg[ \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}  \Bigg]^{\sigma(\kappa-1) -1}\label{eq:total-demand-multiple-cohorts}
 \end{align}
-Here we drop the $a$ since the $f$ vector provides the sufficient information to calculate demand and prices
+Here we drop the $a$ since the $f$ vector provides the sufficient information to calculate demand and prices. 
+
+To verify that the formula in \cref{eq:total-demand-multiple-cohorts} is correct, note that 
+\begin{align}
+y_{ib}(p_i, p_{-i}, f)  = \bar{\Gamma}^{1-\kappa}\Omega \, q_b^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{b(i')}}{q_{b(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand-multiple-cohorts}
+\end{align}
+holds by \cref{eq:full-total-demand} where $b(i')$ denotes the cohort firm $i'$ belongs to. 
+
+The summation in \cref{eq:full-total-demand-multiple-cohorts} is an expectation with respect to the random awareness set conditional on firm $i$ being awared. For $n \in \mathcal{N}$, note that firm $i$ is awared if and only if $A$ conditional on $n$ contains firm $i$. Thus, \cref{eq:full-total-demand-multiple-cohorts} can be rewritten as
+\begin{align}
+y_{ib}(p_i, p_{-i}, f)  &= \bar{\Gamma}^{1-\kappa}\Omega \, q_b^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+& \sum_{n \in \mathcal{N} }  \sum_{{A}\,|\,n}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{b(i')}}{q_{b(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand-multiple-cohorts-summand}
+\end{align}
+Since firms within the same cohort possess the same quality, fixing $n \in \mathcal{N}$ and $A$ conditional on $n$, the summand within the bracket in \cref{eq:full-total-demand-multiple-cohorts-summand} can be rewritten as 
+\begin{align}
+\sum_{i'\in A}\left( \frac{p_{b(i')}}{q_{b(i')}}\right)^{-1/\sigma} &= \sum_{b' \neq b } n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+p_i^{-1/\sigma}   + (n_b-1) p^{-1/\sigma}_{b}  \\
+&= \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}  \label{eq:full-total-demand-multiple-cohorts-summand-alternative}
+\end{align}
 
 
-\textbf{TODO} Take \cref{eq:full-total-demand} and walk through the steps to simplify it using the notation in that section.  Denote a particular firm $i$
-
+Note that, conditional on $n_b > 0$, the probability of a $b$-cohort firm being included in the $n_b$ awared firms out of total $N$ firms is $n_b /N$ (Polya urn). Hence, combined with \cref{eq:full-total-demand-multiple-cohorts-summand-alternative},  \cref{eq:full-total-demand-multiple-cohorts} can be written in terms of cross-cohort awareness counts as
+\begin{align}
+y_{ib}(p_i, p_{-i}, f) 
+&=  \overline{\Gamma}^{1 - \kappa} \Omega q_b^{1/\sigma} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot \\ 
+&\sum_{ n \in \mathcal{N} } n_b f_n \Bigg[ \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}  \Bigg]^{\sigma(\kappa-1) -1}
+\end{align}
 
 \section{General Notation}
 This section establishes some general notation used in the solutions.
