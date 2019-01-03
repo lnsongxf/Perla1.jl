@@ -300,18 +300,20 @@ Since firms within the same quality group possess the same quality, fixing $n \i
 where the second equation follows from the fact that $n = n_H + n_L$.
 
 Conditional on $n_H$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
-\begin{align}
+
+\begin{equation}\label{eq:full-total-demand-two-quality-alternative}
+\begin{aligned}
 & y_{i}(p_i, p_{-i}, f) 
 =  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \\ 
 &\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  
 n_H \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
 \left( 
- n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
+n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
 (n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
 \dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
-  \right)  
-\label{eq:full-total-demand-two-quality-alternative}
-\end{align}
+\right)  
+\end{aligned}
+\end{equation}
 
 \subsubsection{Deriving Demand with Symmetric Quality from Two Quality Demand}
 \eqref{eq:full-total-demand-two-quality-alternative} nests the symmetric quality formula with a single cohort, by taking $N_L = 0$ and $\bar b = 1$. To see this, first note that
@@ -343,8 +345,8 @@ n \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +
 which is equivalent with \eqref{eq:full-total-demand-multiple-cohorts-alternative-first} -- \eqref{eq:full-total-demand-multiple-cohorts-alternative-second} by taking $N = N_H$, $p_b = p_H$, and $q_b = q_H$.
 
 
-\subsubsection{Demand with a Single Cohort with Multiple Qualities}
-The formula can be exteded to multiple $K$ quality types with arbitrary $K > 1$. Consider the demand function faced by firm $i$ in quality type $k$ as having price $p_i$. Using a similar argument as above, it can be shown that the demand function can be represented by
+\subsubsection{Extension: Demand with a Single Cohort with Multiple Qualities}
+The formula \eqref{eq:full-total-demand-two-quality-alternative} can be extended to multiple $K$ quality types with arbitrary $K > 1$. Consider the demand function faced by firm $i$ in quality type $k$ as having price $p_i$. Using a similar argument as above, it can be shown that the demand function can be represented by
 \begin{align}
 y_{ik}(p_i, p_{-i}, f) 
 &= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
