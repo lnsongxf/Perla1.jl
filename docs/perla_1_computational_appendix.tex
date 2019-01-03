@@ -271,6 +271,45 @@ y_{ib}(p_i, p_{-i}, f)
 \dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}}{{ q_b^{-1/\sigma }}}  \Bigg]^{\sigma(\kappa-1) -1}
 \end{align}
 
+\subsection{Demand with a Single Cohort with Two Qualities}
+
+Let $q_k$ and $p_k$ denote the quality of all firms in quality type $k \in \{H, L\}$ where $q_H \geq q_L$. $N_k$ represents the total number of firms with quality $k$. Since we consider a single cohort case, $\mathcal{N} = \{0\} \cup \mathbb{N}$. Consider the demand function faced by firm $i$ in quality type $H$ (quality type $L$ case is symmetric) as having price $p_i$. Note that 
+\begin{align}
+y_{ik}(p_i, p_{-i}, f)  = \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand-multiple-qualities}
+\end{align}
+holds by \cref{eq:full-total-demand} where $k(i')$ denotes the quality type firm $i'$ belongs to. 
+
+The summation in \eqref{eq:full-total-demand-multiple-qualities} is an expectation with respect to the random awareness set conditional on firm $i$ being awared. For $n \in \mathcal{N}$, note that firm $i$ is awared if and only if $A$ conditional on $n$ contains firm $i$. Letting $n_k$ denote the number of awared firms with $k \in \{H, L\}$ quality type, \eqref{eq:full-total-demand-multiple-qualities} can be rewritten as
+\begin{align}
+	y_{ik}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+	& \sum_{n \in \mathcal{N} }  \sum_{{A}\,|\,n}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  \\
+	&= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+	&\sum_{n \in \mathcal{N} } \sum_{n'_H =1}^n \sum_{{A}\,|\,n; n_H = n'_H}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  
+	\label{eq:full-total-demand-multiple-qualities-summand}
+\end{align}
+Since firms within the same quality group possess the same quality, fixing $n \in \mathcal{N}$ and $n_H \leq n$, by considering $A$ conditional on $n$, the summand within the bracket in \cref{eq:full-total-demand-multiple-qualities-summand} can be rewritten as 
+\begin{align}
+\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma} &= \sum_{k' \in \{H, L\} } n_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} \\
+&= n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
+(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }}  \label{eq:full-total-demand-multiple-qualities-summand-alternative}
+\end{align}
+where the second equation follows from the fact that $n = n_H + n_L$.
+
+Conditional on $n_H$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, combined with \eqref{eq:full-total-demand-multiple-qualities-summand-alternative},  \eqref{eq:full-total-demand-multiple-qualities-summand} can be rewritten as
+\begin{align}
+& y_{ib}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+&\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
+\dfrac{n_H}{N_H}
+\left( 
+ n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
+(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
+  \right)  
+\label{eq:full-total-demand-multiple-qualities-alternative}
+\end{align}
 \section{General Notation}
 This section establishes some general notation used in the solutions.
 Define the lexicographic ordering matrix as
