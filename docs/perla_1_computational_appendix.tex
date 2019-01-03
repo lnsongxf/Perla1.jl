@@ -300,9 +300,9 @@ where the second equation follows from the fact that $n = n_H + n_L$.
 Conditional on $n_H$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, combined with \eqref{eq:full-total-demand-multiple-qualities-summand-alternative},  \eqref{eq:full-total-demand-multiple-qualities-summand} can be rewritten as
 \begin{align}
 & y_{ib}(p_i, p_{-i}, f) 
-=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
-&\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
-\dfrac{n_H}{N_H}
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \\ 
+&\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  
+n_H \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
 \left( 
  n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
 (n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
