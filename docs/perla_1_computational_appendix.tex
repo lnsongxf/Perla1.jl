@@ -311,7 +311,7 @@ n_H \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
 n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
 (n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
 \dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
-\right)  
+\right)^{\sigma (\kappa - 1)-1}
 \end{aligned}
 \end{equation}
 
@@ -334,13 +334,13 @@ n_H
 n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
 (n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
 \dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
-\right)  \\
+\right)^{\sigma (\kappa - 1)-1}  \\
 &=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \sum_{n \in \mathcal{N}} f_{n}  
 n
 \left( 
 n \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
 \dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
-\right)  
+\right)^{\sigma (\kappa - 1)-1}
 \end{align}
 which is equivalent with \eqref{eq:full-total-demand-multiple-cohorts-alternative-first} -- \eqref{eq:full-total-demand-multiple-cohorts-alternative-second} by taking $N = N_H$, $p_b = p_H$, and $q_b = q_H$.
 
@@ -373,7 +373,7 @@ n_k \sum_{v \in \mathcal{V}_{n_k} (n)}
 \left( 
 \sum_{k' =1 }^{K} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
 \dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{k} }{{ q_k^{-1/\sigma }}}
-\right)  
+\right)^{\sigma (\kappa - 1)-1}
 \end{align}
 
 
