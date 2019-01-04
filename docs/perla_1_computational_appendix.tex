@@ -299,8 +299,21 @@ Since firms within the same quality group possess the same quality, fixing $n \i
 \end{align}
 where the second equation follows from the fact that $n = n_H + n_L$.
 
-Conditional on $n_H$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
+For a given awareness set $A$, firm $i$ is awared if and only if $n_H$ firms of type $H$ awared and $i$ is included in the awared $n_H$ firms of type $H$, with the probability represented by
+\begin{equation}\label{eq:two-quality-firm-awareness-probability-symbol}
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms of type $H$ are awared\}})
+\end{equation}
+which is identical with
+ \begin{equation}
+P( \text{\{Firm $i$ is awared\} | \{$n_H$ firms of type $H$ are awared\}}) \cdot P( \text{\{$n_H$ firms of type $H$ are awared\}}) 
+ \end{equation}
+Conditional on $n_H$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
+\begin{equation}\label{eq:two-quality-firm-awareness-probability}
+\dfrac{n_H}{N_H}
+\dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}} 
+\end{equation}
 
+Thus, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative} and \eqref{eq:two-quality-firm-awareness-probability},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
 \begin{equation}\label{eq:full-total-demand-two-quality-alternative}
 \begin{aligned}
 & y_{i}(p_i, p_{-i}, f) 
