@@ -376,7 +376,22 @@ We introduce $v_{n_k} (n)$, a $K$-length vector of zeros and (or) natural number
 \end{equation}
 where $v_{k'}$ is the $k'$th element of $v$. It is worth mentioning that the second equation in \eqref{eq:full-total-demand-two-quality-summand-alternative} does not follow since fixing $n_k$ is not sufficient to figure out $n_{k'}$ for $k \neq k'$ when $K > 2$.
 
-Conditional on $n_k$ and $n$, the number of firms of type $k$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^K N_{k'}$. Hence, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative}, we have
+For a given awareness set $A$, firm $i$ of type $k$ is awared if and only if $v$ firms are awared for some $v \in \mathcal{V}_{n_k} (n)$ and $i$ is included in the awared $v$ firms, with the probability represented by
+\begin{equation}\label{eq:multiple-quality-firm-awareness-probability-symbol}
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$v$ firms are awared\}})
+\end{equation}
+which is identical with
+\begin{equation}
+P( \text{\{Firm $i$ is awared\} | \{$v$ firms are awared\}}) \cdot P( \text{\{$v$ firms are awared\}}) 
+\end{equation}
+
+Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^K N_{k'}$. Hence, \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
+\begin{equation}\label{eq:multiple-quality-firm-awareness-probability}
+\dfrac{n_k}{N_k}
+\dfrac{\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
+\end{equation}
+
+Thus, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative} and \eqref{eq:multiple-quality-firm-awareness-probability}, we have
 \begin{align}
 & y_{ik}(p_i, p_{-i}, f) 
 =  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
