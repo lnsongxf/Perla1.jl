@@ -376,12 +376,37 @@ n_k \sum_{v \in \mathcal{V}_{n_k} (n)}
 \right)^{\sigma (\kappa - 1)-1}
 \end{align}
 
-
 \subsection{Demand with Multiple Cohorts with Two Qualities}
-Consider firm $i$ of type $H$ in cohort $b$ as having price $p_i$. Without loss of generality, we assume that $N_H$ and $N_L$ are fixed for all cohorts for brevity.
+Consider firm $i$ of type $H$ in cohort $b$ as having price $p_i$; the demand function firms in the other type, $L$, can be deduced symmetrically. Without loss of generality, we assume that $N_H$ and $N_L$ are fixed for all cohorts for brevity.  
 
-Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $H$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{Hb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. 
+Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $H$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{Hb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, the demand function can be represented by
+\begin{align}
+y_{ib}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\
+& \sum_{n \in \mathcal{N} } \sum_{n'_k =1}^n \sum_{{A}\,|\,n; n_k = n'_k}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  
+\label{eq:full-total-demand-multiple-cohorts-two-quality}
+\end{align}
+holds by \cref{eq:full-total-demand} where $b(i')$ denotes the cohort firm $i'$ belongs to. 
 
+
+Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $H$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{Hb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, as in \eqref{eq:full-total-demand-multiple-quality-summand-alternative}, the demand function can be represented as
+
+\begin{equation}\label{eq:full-total-demand-two-quality-multiple-cohort}
+\begin{aligned}
+& y_{ib}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot  \\ 
+& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_H \in \mathcal{V} (n) }  
+\Bigg\{
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms are awared\}})
+\cdot \\ & \quad
+\Bigg[
+\sum_{b' = 1}^{\bar b} 
+\left(
+n_{Hb'} \left( \dfrac{p_{Hb}}{q_{H}}   \right)^{-1/\sigma} +  
+(n - n_{Hb'}) \left( \dfrac{p_{Lb}}{q_{L}}   \right)^{-1/\sigma} \right) + 
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{Hb} }{ q_H^{-1/\sigma }} 
+\Bigg]^{\sigma (\kappa - 1)-1} \Bigg\}
+\end{aligned}
+\end{equation}
 
 Conditional on $n_{H} \in \mathcal{V}(n)$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_{Hb}$ firms out of total $N_H$ firms in type $k$ is $n_{Hb} / N_{H}$ (Polya urn). As in \eqref{eq:full-total-demand-two-quality-alternative}, for each $b'$ cohort, the probability of having having $n_{Hb'}$ firms from type $H$ out of $n_{b'}$ draws is
 $
