@@ -299,15 +299,11 @@ Since firms within the same quality group possess the same quality, fixing $n \i
 \end{align}
 where the second equation follows from the fact that $n = n_H + n_L$.
 
-For a given awareness set $A$, firm $i$ is awared if and only if $n_H$ firms of type $H$ awared and $i$ is included in the awared $n_H$ firms of type $H$, with the probability represented by
+For a given awareness set $A$, firm $i$ is awared if and only if $n_H$ firms of type $H$ are awared and $i$ is included in the awared $n_H$ firms of type $H$, with the probability represented by
 \begin{equation}\label{eq:two-quality-firm-awareness-probability-symbol}
 P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms of type $H$ are awared\}})
 \end{equation}
-which is identical with
- \begin{equation}
-P( \text{\{Firm $i$ is awared\} | \{$n_H$ firms of type $H$ are awared\}}) \cdot P( \text{\{$n_H$ firms of type $H$ are awared\}}) 
- \end{equation}
-Conditional on $n_H$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
+Note that \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with the product of $P( \text{\{$n_H$ firms of type $H$ are awared\}})$ and  $P( \text{\{Firm $i$ is awared\} | \{$n_H$ firms of type $H$ are awared\}})$. Conditional on $n_H$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
 \begin{equation}\label{eq:two-quality-firm-awareness-probability}
 \dfrac{n_H}{N_H}
 \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}} 
@@ -380,12 +376,8 @@ For a given awareness set $A$, firm $i$ of type $k$ is awared if and only if $v$
 \begin{equation}\label{eq:multiple-quality-firm-awareness-probability-symbol}
 P( \text{\{Firm $i$ is awared\} $\cap$ \{$v$ firms are awared\}})
 \end{equation}
-which is identical with
-\begin{equation}
-P( \text{\{Firm $i$ is awared\} | \{$v$ firms are awared\}}) \cdot P( \text{\{$v$ firms are awared\}}) 
-\end{equation}
 
-Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^{\bar k} N_{k'}$. Hence, \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
+Note that  \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with the product of two probabilities $P( \text{\{$v$ firms are awared\}}) $ and $P( \text{\{Firm $i$ is awared\} | \{$v$ firms are awared\}})$. Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^{\bar k} N_{k'}$. Hence,  \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
 \begin{equation}\label{eq:multiple-quality-firm-awareness-probability}
 \dfrac{n_k}{N_k}
 \dfrac{\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
