@@ -359,7 +359,7 @@ which is equivalent with \eqref{eq:full-total-demand-multiple-cohorts-alternativ
 
 
 \subsubsection{Extension: Demand with a Single Cohort with Multiple Qualities}
-The formula \eqref{eq:full-total-demand-two-quality-alternative} can be extended to multiple $K$ quality types with arbitrary $K > 1$. Consider the demand function faced by firm $i$ in quality type $k$ as having price $p_i$. Using a similar argument as above, it can be shown that the demand function can be represented by
+The formula \eqref{eq:full-total-demand-two-quality-alternative} can be extended to multiple ${\bar k}$ quality types with arbitrary ${\bar k} > 1$. Consider the demand function faced by firm $i$ in quality type $k$ as having price $p_i$. Using a similar argument as above, it can be shown that the demand function can be represented by
 \begin{align}
 y_{ik}(p_i, p_{-i}, f) 
 &= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
@@ -367,14 +367,14 @@ y_{ik}(p_i, p_{-i}, f)
 \label{eq:full-total-demand-multiple-quality-summand}
 \end{align}
 
-We introduce $v_{n_k} (n)$, a $K$-length vector of zeros and (or) natural numbers whose sum is $n$ and $k$th element is fixed by $n_k \leq n$, such that its $k'$th element represents the number of awared firms with type $k'$. Let $\mathcal{V}_{n_k} (n)$ denote the collection of all $v_{n_k} (n)$. Then, given $v \in \mathcal{V}_{n_k} (n)$, the summand in \eqref{eq:full-total-demand-multiple-quality-summand} can be represented by
+We introduce $v_{n_k} (n)$, a ${\bar k}$-length vector of zeros and (or) natural numbers whose sum is $n$ and $k$th element is fixed by $n_k \leq n$, such that its $k'$th element represents the number of awared firms with type $k'$. Let $\mathcal{V}_{n_k} (n)$ denote the collection of all $v_{n_k} (n)$. Then, given $v \in \mathcal{V}_{n_k} (n)$, the summand in \eqref{eq:full-total-demand-multiple-quality-summand} can be represented by
 \begin{equation}
 \sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma} = 
-\sum_{k' =1 }^{K} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
+\sum_{k' =1 }^{{\bar k}} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
 \dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{k} }{{ q_k^{-1/\sigma }}}
 \label{eq:full-total-demand-multiple-quality-summand-alternative}
 \end{equation}
-where $v_{k'}$ is the $k'$th element of $v$. It is worth mentioning that the second equation in \eqref{eq:full-total-demand-two-quality-summand-alternative} does not follow since fixing $n_k$ is not sufficient to figure out $n_{k'}$ for $k \neq k'$ when $K > 2$.
+where $v_{k'}$ is the $k'$th element of $v$. It is worth mentioning that the second equation in \eqref{eq:full-total-demand-two-quality-summand-alternative} does not follow since fixing $n_k$ is not sufficient to figure out $n_{k'}$ for $k \neq k'$ when ${\bar k} > 2$.
 
 For a given awareness set $A$, firm $i$ of type $k$ is awared if and only if $v$ firms are awared for some $v \in \mathcal{V}_{n_k} (n)$ and $i$ is included in the awared $v$ firms, with the probability represented by
 \begin{equation}\label{eq:multiple-quality-firm-awareness-probability-symbol}
@@ -385,10 +385,10 @@ which is identical with
 P( \text{\{Firm $i$ is awared\} | \{$v$ firms are awared\}}) \cdot P( \text{\{$v$ firms are awared\}}) 
 \end{equation}
 
-Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^K N_{k'}$. Hence, \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
+Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^{\bar k} N_{k'}$. Hence, \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
 \begin{equation}\label{eq:multiple-quality-firm-awareness-probability}
 \dfrac{n_k}{N_k}
-\dfrac{\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
+\dfrac{\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
 \end{equation}
 
 Thus, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative} and \eqref{eq:multiple-quality-firm-awareness-probability}, we have
@@ -397,9 +397,9 @@ Thus, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alterna
 =  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
 &\sum_{n \in \mathcal{N} } f_n   \sum_{n_k =1}^n  
 n_k \sum_{v \in \mathcal{V}_{n_k} (n)} 
-\dfrac{\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
+\dfrac{\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
 \left( 
-\sum_{k' =1 }^{K} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
+\sum_{k' =1 }^{{\bar k}} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
 \dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{k} }{{ q_k^{-1/\sigma }}}
 \right)^{\sigma (\kappa - 1)-1}
 \end{align}
