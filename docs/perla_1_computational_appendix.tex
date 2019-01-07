@@ -275,83 +275,83 @@ y_{ib}(p_i, p_{-i}, f)
 
 \subsection{Demand with a Single Cohort with Two Qualities}
 
-Let $q_k$ and $p_k$ denote the quality of all firms in quality type $k \in \{H, L\}$ where $q_H \geq q_L$. $N_k$ represents the total number of firms with quality $k$. Since we consider a single cohort case, $\mathcal{N} = \{0\} \cup \mathbb{N}$. Consider the demand function faced by firm $i$ in quality type $H$ (quality type $L$ case is symmetric) as having price $p_i$. Note that 
+Let $q_k$ and $p_k$ denote the quality of all firms in quality type $k \in \{H, L\}$ where $q_H \geq q_L$. $N_k$ represents the total number of firms with quality $k$. Since we consider a single cohort case, $\mathcal{N} = \{0\} \cup \mathbb{N}$. Consider the demand function faced by firm $i$ in quality type $k \in \{H, L\}$. Note that 
 \begin{align}
-y_{i}(p_i, p_{-i}, f)  = \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand-two-quality}
+y_{ik}(p_i, p_{-i}, f)  = \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\,\sum_{{A}\,|\, i}\left(\hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)\label{eq:full-total-demand-two-quality}
 \end{align}
 holds by \cref{eq:full-total-demand} where $k(i')$ denotes the quality type firm $i'$ belongs to. 
 
-The summation in \eqref{eq:full-total-demand-two-quality} is an expectation with respect to the random awareness set conditional on firm $i$ being awared. For $n \in \mathcal{N}$, note that firm $i$ is awared if and only if $A$ conditional on $n$ contains firm $i$. Letting $n_k$ denote the number of awared firms with $k \in \{H, L\}$ quality type, \eqref{eq:full-total-demand-two-quality} can be rewritten as
+The summation in \eqref{eq:full-total-demand-two-quality} is an expectation with respect to the random awareness set conditional on firm $i$ being awared. For $n \in \mathcal{N}$, note that firm $i$ is awared if and only if $A$ conditional on $n$ contains firm $i$. Letting $n_k$ denote the number of awared firms with $k$ quality type, \eqref{eq:full-total-demand-two-quality} can be rewritten as
 \begin{align}
-	y_{i}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+	y_{ik}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
 	& \sum_{n \in \mathcal{N} }  \sum_{{A}\,|\,n}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  \\
-	&= \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
-	&\sum_{n \in \mathcal{N} } \sum_{n'_H =1}^n \sum_{{A}\,|\,n; n_H = n'_H}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  
+	&= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+	&\sum_{n \in \mathcal{N} } \sum_{n'_k =1}^n \sum_{{A}\,|\,n; n_k = n'_k}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  
 	\label{eq:full-total-demand-two-quality-summand}
 \end{align}
-Since firms within the same quality group possess the same quality, fixing $n \in \mathcal{N}$ and $n_H \leq n$, by considering $A$ conditional on $n$, the summand within the bracket in \cref{eq:full-total-demand-two-quality-summand} can be rewritten as 
+Since firms within the same quality group possess the same quality, fixing $n \in \mathcal{N}$ and $n_k \leq n$, by considering $A$ conditional on $n$, the summand within the bracket in \cref{eq:full-total-demand-two-quality-summand} can be rewritten as 
 \begin{align}
 \sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma} &= \sum_{k' \in \{H, L\} } n_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} \\
-&= n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
-(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }}  \label{eq:full-total-demand-two-quality-summand-alternative}
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }} \\
+&= n_k \left( \dfrac{p_{k}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_k) \left( \dfrac{p_{-k}}{q_{-K}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }}  \label{eq:full-total-demand-two-quality-summand-alternative}
 \end{align}
-where the second equation follows from the fact that $n = n_H + n_L$.
+where subscript $-k$ denotes the other quality type different from $k$ ($H$ if $k = L$ and $L$ if $k = H$). The second equation \eqref{eq:full-total-demand-two-quality-summand-alternative} follows from the fact that $n = n_H + n_L$.
 
-For a given awareness set $A$, firm $i$ is awared if and only if $n_H$ firms of type $H$ are awared and $i$ is included in the awared $n_H$ firms of type $H$, with the probability represented by
+For a given awareness set $A$, firm $i$ is awared if and only if $n_k$ firms of type $k$ are awared and $i$ is included in the awared $n_k$ firms of type $k$, with the probability represented by
 \begin{equation}\label{eq:two-quality-firm-awareness-probability-symbol}
-P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms of type $H$ are awared\}})
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_k$ firms of type $k$ are awared\}})
 \end{equation}
-Note that \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with the product of $P( \text{\{$n_H$ firms of type $H$ are awared\}})$ and  $P( \text{\{Firm $i$ is awared\} | \{$n_H$ firms of type $H$ are awared\}})$. Conditional on $n_H$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
+Note that \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with the product of $P( \text{\{$n_k$ firms of type $k$ are awared\}})$ and  $P( \text{\{Firm $i$ is awared\} | \{$n_k$ firms of type $k$ are awared\}})$. Conditional on $n_k$, the number of firms of type $k$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $n_k$ firms from type $k$ out of $n$ draws is $\binom{N_k}{n_k} \binom{N_{-k}}{n - n_k} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
 \begin{equation}\label{eq:two-quality-firm-awareness-probability}
-\dfrac{n_H}{N_H}
-\dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}} 
+\dfrac{n_k}{N_k}
+\dfrac{\binom{N_k}{n_k} \binom{N_{-k}}{n - n_k}}{\binom{N_H + N_L}{n}} 
 \end{equation}
 
 Thus, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative} and \eqref{eq:two-quality-firm-awareness-probability},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
 \begin{equation}\label{eq:full-total-demand-two-quality-alternative}
 \begin{aligned}
-& y_{i}(p_i, p_{-i}, f) 
-=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \\ 
-&\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  
-n_H \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
+& y_{ik}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
+&\sum_{n \in \mathcal{N} } f_n   \sum_{n_k =1}^n  
+n_k \dfrac{\binom{N_k}{n_k} \binom{N_{-k}}{n - n_k}}{\binom{N_H + N_L}{n}}
 \left( 
-n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
-(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
+n_k \left( \dfrac{p_{k}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_k) \left( \dfrac{p_{-k}}{q_{-k}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }} 
 \right)^{\sigma (\kappa - 1)-1}
 \end{aligned}
 \end{equation}
 
 \subsubsection{Deriving Demand with Symmetric Quality from Two Quality Demand}
-\eqref{eq:full-total-demand-two-quality-alternative} nests the symmetric quality formula with a single cohort, by taking $N_L = 0$ and $\bar b = 1$. To see this, first note that
+\eqref{eq:full-total-demand-two-quality-alternative} nests the symmetric quality formula with a single cohort, by taking $N_{-k} = 0$ and $\bar b = 1$. To see this, first note that
 \begin{equation}
-\dfrac{\binom{N_H}{n_H} \binom{0}{n - n_H}}{\binom{N_H}{n}} = 
+\dfrac{\binom{N_k}{n_k} \binom{0}{n - n_k}}{\binom{N_k}{n}} = 
 \begin{cases}
 1 & \text{if $n = n_H$} \\
 0 & \text{otherwise} 
 \end{cases}
 \end{equation}
-as the hypergeometric distribution has support on $\{\max(0, n+N_H - (N_H + N_L) ), ..., \min (n, N_H )  \}$, which is $\{n\}$ when $N_L = 0$. Hence, in this case, \eqref{eq:full-total-demand-two-quality-alternative} can be rewritten as
+as the hypergeometric distribution has support on $\{\max(0, n+N_k - (N_H + N_L) ), ..., \min (n, N_k )  \}$, which is $\{n\}$ when $N_{-k} = 0$. Hence, in this case, \eqref{eq:full-total-demand-two-quality-alternative} can be rewritten as
 \begin{align}
- y_{i}(p_i, p_{-i}, f) 
-&=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \\ 
-&\sum_{n \in \mathcal{N}, n_H = n } f_{n}  
-n_H 
+ y_{ik}(p_i, p_{-i}, f) 
+&=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
+&\sum_{n \in \mathcal{N}, n_k = n } f_{n}  
+n_k 
 \left( 
-n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
-(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
+n_k \left( \dfrac{p_{k}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_k) \left( \dfrac{p_{-k}}{q_{-k}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }} 
 \right)^{\sigma (\kappa - 1)-1}  \\
-&=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot \sum_{n \in \mathcal{N}} f_{n}  
+&=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \sum_{n \in \mathcal{N}} f_{n}  
 n
 \left( 
-n \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
+n \left( \dfrac{p_{k}}{q_{k}}   \right)^{-1/\sigma} +  
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }} 
 \right)^{\sigma (\kappa - 1)-1}
 \end{align}
-which is equivalent with \eqref{eq:full-total-demand-multiple-cohorts-alternative-first} -- \eqref{eq:full-total-demand-multiple-cohorts-alternative-second} by taking $N = N_H$, $p_b = p_H$, and $q_b = q_H$.
+which is equivalent with \eqref{eq:full-total-demand-multiple-cohorts-alternative-first} -- \eqref{eq:full-total-demand-multiple-cohorts-alternative-second} by taking $N = N_k$, $p_b = p_k$, and $q_b = q_k$.
 
 
 \subsubsection{Extension: Demand with a Single Cohort with Multiple Qualities}
@@ -397,62 +397,59 @@ n_k \sum_{v \in \mathcal{V}_{n_k} (n)}
 \end{align}
 
 \subsection{Demand with Multiple Cohorts with Two Qualities}
-Consider firm $i$ of type $H$ in cohort $b$ as having price $p_i$; the demand function firms in the other type, $L$, can be deduced symmetrically. Without loss of generality, we assume that $N_H$ and $N_L$ are fixed for all cohorts for brevity.  
+Consider firm $i$ of type $k \in \{H, L\}$ in cohort $b$ as having price $p_{ikb}$; the demand function firms in the other type, $L$, can be deduced symmetrically. Without loss of generality, we assume that $N_H$ and $N_L$ are fixed for all cohorts for brevity.  
 
-Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $H$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{Hb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, the demand function can be represented by
+Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $k$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{kb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, the demand function can be represented by
 \begin{align}
-y_{ib}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\
+y_{ikb}(p_i, p_{-i}, f) &= \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\
 & \sum_{n \in \mathcal{N} } \sum_{n'_k =1}^n \sum_{{A}\,|\,n; n_k = n'_k}\left( 1( i \in A ) \hat{f}(a,A)\left[\sum_{i'\in A}\left( \frac{p_{k(i')}}{q_{k(i')}}\right)^{-1/\sigma}\right]^{\sigma (\kappa - 1)-1}\right)  
 \label{eq:full-total-demand-multiple-cohorts-two-quality}
 \end{align}
 holds by \cref{eq:full-total-demand} where $b(i')$ denotes the cohort firm $i'$ belongs to. 
 
-
-Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $H$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{Hb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, as in \eqref{eq:full-total-demand-multiple-quality-summand-alternative}, the demand function can be represented as
-
+Let $\mathcal{V} (n)$ denote the collection of $\bar b$-length vectors whose $b'$th element represents the number of awared firms of type $k$ from cohort $b'$ given $n$, i.e., vectors whose $b'$th element $n_{kb'}$ has the value of $\{0,..., n_{b'} \}$. It is worth mentioning that given $n$, the size of $\mathcal{V} (n)$ is $\prod_{b'=1}^{\bar b} (n_{b'} + 1)$. Then, as in \eqref{eq:full-total-demand-multiple-quality-summand-alternative}, the demand function can be represented as
 \begin{equation}\label{eq:full-total-demand-two-quality-multiple-cohort}
 \begin{aligned}
-& y_{ib}(p_i, p_{-i}, f) 
-=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot  \\ 
-& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_H \in \mathcal{V} (n) }  
+& y_{ikb}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot  \\ 
+& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_k \in \mathcal{V} (n) }  
 \Bigg\{
-P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms are awared\}})
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_k$ firms are awared\}})
 \cdot \\ & \quad
 \Bigg[
 \sum_{b' = 1}^{\bar b} 
 \left(
-n_{Hb'} \left( \dfrac{p_{Hb}}{q_{H}}   \right)^{-1/\sigma} +  
-(n - n_{Hb'}) \left( \dfrac{p_{Lb}}{q_{L}}   \right)^{-1/\sigma} \right) + 
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{Hb} }{ q_H^{-1/\sigma }} 
+n_{kb'} \left( \dfrac{p_{kb}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_{kb'}) \left( \dfrac{p_{(-k)b}}{q_{-k}}   \right)^{-1/\sigma} \right) + 
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{kb} }{ q_k^{-1/\sigma }} 
 \Bigg]^{\sigma (\kappa - 1)-1} \Bigg\}
 \end{aligned}
 \end{equation}
 
-Note that $P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms are awared\}})$ in \eqref{eq:full-total-demand-two-quality-multiple-cohort} is identical with the product of the following two probabilities: $P( \text{\{Firm $i$ is awared | $n_H$ firms are awared\}})$ and $P( \text{\{$n_H$ firms are awared\}})$. Conditional on $n_{H} \in \mathcal{V}(n)$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_{Hb}$ firms out of total $N_H$ firms in type $k$ is $n_{Hb} / N_{H}$ (Polya urn). As in \eqref{eq:full-total-demand-two-quality-alternative}, for each $b'$ cohort, the probability of having having $n_{Hb'}$ firms from type $H$ out of $n_{b'}$ draws is
+Note that $P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_k$ firms are awared\}})$ in \eqref{eq:full-total-demand-two-quality-multiple-cohort} is identical with the product of the following two probabilities: $P( \text{\{Firm $i$ is awared | $n_k$ firms are awared\}})$ and $P( \text{\{$n_k$ firms are awared\}})$. Conditional on $n_{k} \in \mathcal{V}(n)$ and $n$, the number of firms of type $k$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_{kb}$ firms out of total $N_k$ firms in type $k$ is $n_{kb} / N_{k}$ (Polya urn). As in \eqref{eq:full-total-demand-two-quality-alternative}, for each $b'$ cohort, the probability of having $n_{kb'}$ firms from type $k$ out of $n_{b'}$ draws is
 $
- {\binom{N_H}{n_{Hb'}} \binom{N_L}{n_{b'} - n_{Hb'}}}/{\binom{N_H + N_L}{n_{b'}}}
+ {\binom{N_k}{n_{kb'}} \binom{N_{-k}}{n_{b'} - n_{kb'}}}/{\binom{N_H + N_L}{n_{b'}}}
 $
 (hypergeometric distribution). Since the awareness process is independent across all cohorts, $v \in \mathcal{V}(n)$ firms awared out of $n$ draws is $
-\prod_{b'=1}^{\bar b} \left[ {\binom{N_H}{n_{Hb'}} \binom{N_L}{n_{b'} - n_{Hb'}}}/{\binom{N_H + N_L}{n_{b'}}} \right]$. Hence, the demand function is
+\prod_{b'=1}^{\bar b} \left[ {\binom{N_k}{n_{kb'}} \binom{N_{-k}}{n_{b'} - n_{kb'}}}/{\binom{N_H + N_L}{n_{b'}}} \right]$. Hence, the demand function is
 \begin{equation}\label{eq:full-total-demand-two-quality-multiple-cohort-alternative}
 \begin{aligned}
-& y_{ib}(p_i, p_{-i}, f) 
-=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_H} \cdot  \\ 
-& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_H \in \mathcal{V} (n) }  
+& y_{ikb}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot  \\ 
+& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_k \in \mathcal{V} (n) }  
 \Bigg\{
-\left[ n_{Hb} \prod_{b'=1}^{\bar b} 
- \dfrac{\binom{N_H}{n_{Hb'}} \binom{N_L}{n_{b'} - n_{Hb'}}}{\binom{N_H + N_L}{n_{b'}}}
+\left[ n_{kb} \prod_{b'=1}^{\bar b} 
+ \dfrac{\binom{N_k}{n_{kb'}} \binom{N_{-k}}{n_{b'} - n_{kb'}}}{\binom{N_k + N_L}{n_{b'}}}
 \right] \cdot \\ & \quad
 \Bigg[
 \sum_{b' = 1}^{\bar b} 
 \left(
-n_{Hb'} \left( \dfrac{p_{Hb}}{q_{H}}   \right)^{-1/\sigma} +  
-(n - n_{Hb'}) \left( \dfrac{p_{Lb}}{q_{L}}   \right)^{-1/\sigma} \right) + 
-\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{Hb} }{ q_H^{-1/\sigma }} 
+n_{kb'} \left( \dfrac{p_{kb}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_{kb'}) \left( \dfrac{p_{(-k)b}}{q_{-k}}   \right)^{-1/\sigma} \right) + 
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{kb} }{ q_k^{-1/\sigma }} 
 \Bigg]^{\sigma (\kappa - 1)-1} \Bigg\}
 \end{aligned}
 \end{equation}
-
 
 \section{General Notation}
 This section establishes some general notation used in the solutions.
