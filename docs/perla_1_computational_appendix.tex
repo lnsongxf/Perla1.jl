@@ -299,8 +299,21 @@ Since firms within the same quality group possess the same quality, fixing $n \i
 \end{align}
 where the second equation follows from the fact that $n = n_H + n_L$.
 
-Conditional on $n_H$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
+For a given awareness set $A$, firm $i$ is awared if and only if $n_H$ firms of type $H$ awared and $i$ is included in the awared $n_H$ firms of type $H$, with the probability represented by
+\begin{equation}\label{eq:two-quality-firm-awareness-probability-symbol}
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms of type $H$ are awared\}})
+\end{equation}
+which is identical with
+ \begin{equation}
+P( \text{\{Firm $i$ is awared\} | \{$n_H$ firms of type $H$ are awared\}}) \cdot P( \text{\{$n_H$ firms of type $H$ are awared\}}) 
+ \end{equation}
+Conditional on $n_H$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_H$ firms out of total $N_H$ firms in type $H$ is $n_H / N_H$ (Polya urn). Note that the probability of having $n_H$ firms from type $H$ out of $n$ draws is $\binom{N_H}{n_H} \binom{N_L}{n - n_H} / \binom{N_H + N_L}{n}$ (hypergeometric distribution). Hence, \eqref{eq:two-quality-firm-awareness-probability-symbol} is identical with
+\begin{equation}\label{eq:two-quality-firm-awareness-probability}
+\dfrac{n_H}{N_H}
+\dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}} 
+\end{equation}
 
+Thus, combined with \eqref{eq:full-total-demand-two-quality-summand-alternative} and \eqref{eq:two-quality-firm-awareness-probability},  \eqref{eq:full-total-demand-two-quality-summand} can be rewritten as
 \begin{equation}\label{eq:full-total-demand-two-quality-alternative}
 \begin{aligned}
 & y_{i}(p_i, p_{-i}, f) 
@@ -363,7 +376,22 @@ We introduce $v_{n_k} (n)$, a $K$-length vector of zeros and (or) natural number
 \end{equation}
 where $v_{k'}$ is the $k'$th element of $v$. It is worth mentioning that the second equation in \eqref{eq:full-total-demand-two-quality-summand-alternative} does not follow since fixing $n_k$ is not sufficient to figure out $n_{k'}$ for $k \neq k'$ when $K > 2$.
 
-Conditional on $n_k$ and $n$, the number of firms of type $k$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^K N_{k'}$. Hence, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative}, we have
+For a given awareness set $A$, firm $i$ of type $k$ is awared if and only if $v$ firms are awared for some $v \in \mathcal{V}_{n_k} (n)$ and $i$ is included in the awared $v$ firms, with the probability represented by
+\begin{equation}\label{eq:multiple-quality-firm-awareness-probability-symbol}
+P( \text{\{Firm $i$ is awared\} $\cap$ \{$v$ firms are awared\}})
+\end{equation}
+which is identical with
+\begin{equation}
+P( \text{\{Firm $i$ is awared\} | \{$v$ firms are awared\}}) \cdot P( \text{\{$v$ firms are awared\}}) 
+\end{equation}
+
+Conditional on $v \in \mathcal{V}_{n_k} (n)$, whose $k$th element is $n_k$ (the number of firms of type $k$ awared out of $n$ firms), the probability of firm $i$ being included in the awared $n_k$ firms out of total $N_k$ firms in type $k$ is $n_k / N_k$ (Polya urn). Note that the probability of having $v \in \mathcal{V}_{n_k}(n)$ firms awared out of $n$ draws is $\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } / \binom{N}{n}$ (multivariate hypergeometric distribution) where $N = \sum_{k'=1}^K N_{k'}$. Hence, \eqref{eq:multiple-quality-firm-awareness-probability-symbol} is identical with
+\begin{equation}\label{eq:multiple-quality-firm-awareness-probability}
+\dfrac{n_k}{N_k}
+\dfrac{\prod_{k'=1}^K \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
+\end{equation}
+
+Thus, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative} and \eqref{eq:multiple-quality-firm-awareness-probability}, we have
 \begin{align}
 & y_{ik}(p_i, p_{-i}, f) 
 =  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
@@ -408,7 +436,7 @@ n_{Hb'} \left( \dfrac{p_{Hb}}{q_{H}}   \right)^{-1/\sigma} +
 \end{aligned}
 \end{equation}
 
-Conditional on $n_{H} \in \mathcal{V}(n)$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_{Hb}$ firms out of total $N_H$ firms in type $k$ is $n_{Hb} / N_{H}$ (Polya urn). As in \eqref{eq:full-total-demand-two-quality-alternative}, for each $b'$ cohort, the probability of having having $n_{Hb'}$ firms from type $H$ out of $n_{b'}$ draws is
+Note that $P( \text{\{Firm $i$ is awared\} $\cap$ \{$n_H$ firms are awared\}})$ in \eqref{eq:full-total-demand-two-quality-multiple-cohort} is identical with the product of the following two probabilities: $P( \text{\{Firm $i$ is awared | $n_H$ firms are awared\}})$ and $P( \text{\{$n_H$ firms are awared\}})$. Conditional on $n_{H} \in \mathcal{V}(n)$ and $n$, the number of firms of type $H$ awared out of $n$ firms, the probability of firm $i$ being included in the awared $n_{Hb}$ firms out of total $N_H$ firms in type $k$ is $n_{Hb} / N_{H}$ (Polya urn). As in \eqref{eq:full-total-demand-two-quality-alternative}, for each $b'$ cohort, the probability of having having $n_{Hb'}$ firms from type $H$ out of $n_{b'}$ draws is
 $
  {\binom{N_H}{n_{Hb'}} \binom{N_L}{n_{b'} - n_{Hb'}}}/{\binom{N_H + N_L}{n_{b'}}}
 $
