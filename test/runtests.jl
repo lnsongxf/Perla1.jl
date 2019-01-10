@@ -4,4 +4,5 @@ using LinearAlgebra
 using DifferentialEquations
 import Parameters: @with_kw, @unpack
 
+include("demand/runtests.jl")
 include("transition/runtests.jl")
