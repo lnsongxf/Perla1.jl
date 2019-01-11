@@ -50,8 +50,6 @@ end
 # p: k_bar-vector of prices across firms
 # f: awareness set distribution on 1:(N+1)
 # params: model parameters
-# n: awareness set in 1:(N+1)
-# n_k: number of k-type firms awared such that n_k <= n
 function demand_asymmetric_single_cohort(p_i, k, p, f, params)
     @unpack cohorts, Γ_bar, Ω, q, σ, κ, N_ks = params
     N = sum(N_ks)
