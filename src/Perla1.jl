@@ -15,7 +15,7 @@ include("util/flatten.jl")
 
 export solve_transition_dynamics
 export params_demand_default_base, params_demand_default_symmetric, params_demand_default_asymmetric_single_cohort, params_demand_default_asymmetric
-export params_transition_default_two_cohorts, set_size
+export params_transition_default_two_cohorts, params_transition_default_three_cohorts, params_transition_default_four_cohorts, set_size
 export transition_operator_base!, get_transition_operator
 
 export demand_symmetric, demand_asymmetric_single_cohort, demand_asymmetric
