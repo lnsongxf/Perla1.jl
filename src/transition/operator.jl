@@ -10,7 +10,7 @@ function unit_vector(i::Int64, length::Int64)
 end
 
 # transition operator
-function Q_a!(df, f, p, t)
+function transition_operator_base!(df, f, p, t)
     # unpack params
     @unpack θ, cohorts, ts_cohort, μ = p
     N = cohorts[1] # assume that N_t is invariant across all t
