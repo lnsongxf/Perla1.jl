@@ -11,7 +11,7 @@
     f0_a(a) = (θ_d + θ) / (θ_d + θ * exp(θ_d + θ)*a) # (Appendix E.1)
     cohorts = (N, )
     # base parameters
-    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts) 
+    params_base = @with_kw (μ = μ, θ = θ, θ_d = θ_d, f0 = f0, cohorts = cohorts, ts_cohort = [T]) 
 
     # time-invariant dynamics, with single cohort
     function Q_0!(df, f, p, t)
@@ -82,8 +82,14 @@
 
     # perform sanity check
     function sanity_check_dynamics(Q, params, f_0) 
+
+        # define the corresponding operator
+        N = params.cohorts[1] # assume that N_t is invariant across all t
+        K = length(params.cohorts) # number of cohorts
+        O! = MatrixFreeOperator(Q, (params, 0.0), size = (set_size(params), set_size(params)), opnorm=p->0.1)
+
         # solve dynamics
-        sol_count = solve_transition_dynamics(Q, params, f_0, T)
+        sol_count = solve_transition_dynamics(O!, params, f_0, T; dt = 0.1)
 
         # solve dynamics, using matrix for benchmark
         Q_matrix = get_Q_matrix(params)
@@ -157,19 +163,6 @@
         sanity_check_dynamics(Q_a!, params, f_0)
     end
 
-
-    @testset "10 firms, time-invariant Q" begin
-        N = 10 # 100 firms
-
-        # define generator
-        params = params_base(cohorts = (N, ))
-
-        # definte initial dist.
-        f_0 = [1.0; fill(0.0, N)]
-
-        # perform sanity check
-        sanity_check_dynamics(Q_0!, params, f_0)
-    end
 
     @testset "10 firms, time-invariant Q" begin
         N = 10 # 100 firms
