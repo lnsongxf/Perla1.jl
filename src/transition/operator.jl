@@ -59,3 +59,7 @@ function transition_operator_base!(df, f, p, t)
     end
     df[1] += μ * f[1] # there is no forgetting in the state where no product is recognized
 end
+
+get_transition_operator(params) = get_transition_operator(transition_operator_base!, params) 
+get_transition_operator(transition_operator_base!, params) = MatrixFreeOperator(transition_operator_base!, (params, 0.0), 
+    size = (set_size(params), set_size(params)), opnorm=p->0.1)
