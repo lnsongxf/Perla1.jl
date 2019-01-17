@@ -27,7 +27,9 @@ function transition_operator_base!(df, f, p, t)
         # (outflow)
         full_aware_ratio = sum(Tuple(i) .== N) / current_cohort # ratio of cohorts fully awared
         any_aware_count = sum(Tuple(i) .!= 0) # number of cohorts that aren't zero
-        df[i] = -(((N_total - sum(i)) / N_total) * θ_t * (1-full_aware_ratio) + μ) * f[i]
+        df[i] = -((((N_total - sum(i)) / N_total) * θ_t) * 
+            (1-full_aware_ratio) + # (1-full_aware_ratio) cohorts aren't full (can be destinations) 
+            μ) * f[i] 
 
         # (inflow)
         for cohort in 1:current_cohort
