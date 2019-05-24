@@ -9,4 +9,4 @@
 *.gz
 .ipynb_checkpoints*
 **/.DS_Store
-**/*.ipynb
+*.ipynb
