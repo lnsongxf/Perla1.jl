@@ -1,0 +1,73 @@
+
+```julia
+using OffsetArrays, Parameters, Plots, ForwardDiff, NLsolve
+using ForwardDiff: jacobian, derivative
+using Perla1
+```
+
+```julia
+gr(fmt = :png);
+```
+
+# Model specification
+
+```julia
+params = params_demand_default_symmetric()
+```
+
+```julia
+N = params.cohorts[1]
+b_bar = length(params.cohorts);
+f = fill(1/(N+1)^b_bar, (N+1)^b_bar); # awareness set distribution
+```
+
+# Demand function with multiple cohorts
+
+```julia
+demand = demand_symmetric
+profit = get_profit(demand)
+profit_derivative = get_profit_derivative(profit)
+```
+
+```julia
+b = 1 # the cohort firm i belongs to
+p = fill(1.0, b_bar); # b_bar-vector of prices
+```
+
+## Plots
+
+```julia
+# plot the demand function
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> demand(p_i, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Demand function on p_i")
+```
+
+```julia
+# confirm that the demand function is decreasing in price
+@assert all(diff((p_i -> demand(p_i, b, p, f, params)).(1:100)) .< 0)
+```
+
+```julia
+# plot the profit function
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Profit function on p_i")
+```
+
+```julia
+# plot the profit derivative function
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit_derivative(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Derivative of profit function on p_i")
+```
+
+# Solve Nash equilibria
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p
+```
+
+```julia
+# plot the profit function
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Profit function on p_i, under NE")
+plot!(p, st = :vline, lw = 3, label = "equilibrium prices")
+```

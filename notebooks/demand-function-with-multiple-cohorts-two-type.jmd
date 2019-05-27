@@ -1,0 +1,271 @@
+
+```julia
+using OffsetArrays, Parameters, Plots, ForwardDiff, NLsolve, SpecialFunctions, BenchmarkTools, LinearAlgebra
+using ForwardDiff: jacobian, derivative
+using Perla1
+```
+
+```julia
+gr(fmt = :png);
+```
+
+# Model specification
+
+```julia
+params = params_demand_default_asymmetric_single_cohort()
+```
+
+```julia
+N = sum(params.N_ks)
+k_bar = length(params.N_ks)
+b_bar = length(params.cohorts) # number of cohorts
+f = fill(1/((N+1)^b_bar), (N+1)^b_bar); # awareness set distribution
+```
+
+
+# Demand function with 2-type firms
+
+```julia
+k = 1 # the quality type firm i belongs to
+p = fill(1.0, k_bar); # k_bar-vector of prices
+```
+
+## Demand with 2-type under a single cohort
+
+Consider firms belonging to one of the two types $L$ and $H$ with different qualities $q_L$ and $q_H$. An awareness set can be represented as $n = (N_L, N_H)$ where $N_L$ and $N_H$ denote the number of firms awared from $L$ and $H$ types respectively.
+
+Given the awareness set distribution $f$, firm $i$ on $H$ type faces demand
+$$
+y_{i}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\ 
+\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n  
+\dfrac{n_H}{N_H}  \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
+\left( 
+n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +  
+(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }} 
+\right)^{\sigma (\kappa - 1)-1}
+$$
+
+```julia
+demand_single_cohort = demand_asymmetric_single_cohort
+profit_single_cohort = get_profit(demand_single_cohort)
+profit_derivative_single_cohort = get_profit_derivative(profit_single_cohort)
+
+demand(p_i, k, p, f, params) = demand_single_cohort(p_i, k, p, f, params)
+profit(p_i, k, p, f, params) = profit_single_cohort(p_i, k, 1, p, f, params)
+profit_derivative(p_i, k, p, f, params) = profit_derivative_single_cohort(p_i, k, 1, p, f, params)
+```
+
+## Extension: Demand with 2-type under multiple cohorts
+
+Consider firms belonging to one of the two types $L$ and $H$ with different qualities $q_L$ and $q_H$. An awareness set can be represented as $n = (N_L, N_H)$ where $N_L$ and $N_H$ denote the number of firms awared from $L$ and $H$ types respectively.
+
+Given the awareness set distribution $f$, firm $i$ of type $k$ in $b$ cohort faces demand
+
+\begin{equation}\label{eq:full-total-demand-two-quality-multiple-cohort-alternative}
+\begin{aligned}
+& y_{ikb}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot  \\ 
+& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_k \in \mathcal{V} (n) }  
+\Bigg\{
+\left[ n_{kb} \prod_{b'=1}^{\bar b} 
+ \dfrac{\binom{N_k}{n_{kb'}} \binom{N_{-k}}{n_{b'} - n_{kb'}}}{\binom{N_k + N_L}{n_{b'}}}
+\right] \cdot \\ & \quad
+\Bigg[
+\sum_{b' = 1}^{\bar b} 
+\left(
+n_{kb'} \left( \dfrac{p_{kb}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_{kb'}) \left( \dfrac{p_{(-k)b}}{q_{-k}}   \right)^{-1/\sigma} \right) + 
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{kb} }{ q_k^{-1/\sigma }} 
+\Bigg]^{\sigma (\kappa - 1)-1} \Bigg\}
+\end{aligned}
+\end{equation}
+
+
+```julia
+k = 1 # the quality type firm i belongs to
+p = fill(1.0, k_bar, b_bar); # k_bar-vector of prices
+```
+
+```julia
+demand(p_i, k, b, p, f, params) = demand_asymmetric(p_i, k, b, p, f, params)
+profit(p_i, k, b, p, f, params) = (p_i - params.mc) * demand(p_i, k, b, p, f, params)
+profit_derivative(p_i, k, b, p, f, params) = derivative(p_i -> profit(p_i, k, b, p, f, params), p_i)
+```
+
+### Sanity check: test if multiple cohort demand nests one cohort demand
+
+```julia
+b = 1
+for k in 1:2
+    for p_i in 1.0:.1:3.0
+        @assert demand(p_i, k, p, f, params) ≈ demand(p_i, k, b, p, f, params) 
+    end
+end
+```
+
+## Plots
+
+```julia
+# two cohorts
+params = params_demand_default_asymmetric()
+N_ks = params.N_ks
+N = sum(N_ks)
+k_bar = length(N_ks)
+b_bar = length(params.cohorts) # number of cohorts
+p = fill(1.0, k_bar, b_bar)
+half_size = Int64(round((N+1)^b_bar/2))
+f = [fill(0.0, half_size+1); fill(1/half_size, half_size)]; # note that f is not uniform
+```
+
+### Demand
+
+```julia
+# plot the demand functions for k = 1
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> demand(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Demand function on p_{i1b} (fixing other's p = 1.0)")
+```
+
+```julia
+# plot the demand functions for k = 2
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> demand(p_i, 2, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Demand function on p_{i2b} (fixing other's p = 1.0)")
+```
+
+### Profit
+
+```julia
+# plot the profit functions for k = 1
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Profit function on p_{i1b} (fixing other's p = 1.0)")
+```
+
+```julia
+# plot the profit functions for k = 2
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 2, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:b_bar), lw = 3, title = "Profit function on p_{i2b} (fixing other's p = 1.0)")
+```
+
+## Nash equilibria 
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p # k_bar times b_bar matrix of equilibrium prices
+```
+
+### Plots
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i1b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 2, b, p, f, params))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i2b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+Note that equilbrium prices are identical across cohorts within the same quality type.
+
+### Scenario 2: all firms are awared
+
+```julia
+f_all_awared = [fill(.0, length(f) - 1); 1]; # the last state is n = (N, N), where all firms are awared
+```
+
+```julia
+p = compute_price_equilibrium(f_all_awared, params, profit).p # k_bar times b_bar matrix of equilibrium prices
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f_all_awared, params))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i1b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 2, b, p, f_all_awared, params))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i2b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+Both equilibrium prices and profit functions are identical across cohorts within the same quality type.
+
+### Scenario 3: the number of firms is doubled
+
+```julia
+N_ks = N_ks .* 2  # number of firms per quality group H and L
+N = sum(N_ks)
+cohorts = (N, N) # cohorts
+half_size = Int64(round((N+1)^b_bar/2))
+f_doubled = [fill(0.0, half_size+1); fill(1/half_size, half_size)] # note that f is not uniform
+params_doubled = merge(params, (N_ks = N_ks, cohorts = cohorts))
+```
+
+```julia
+p = compute_price_equilibrium(f_all_awared, params, profit).p # k_bar times b_bar matrix of equilibrium prices
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 1, b, p, f_doubled, params_doubled))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i1b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (b -> (p_i -> profit(p_i, 2, b, p, f_doubled, params_doubled))).(1:b_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i2b, under NE")
+plot!(p[1,:], st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+### Benchmark: see how efficient the current implementation is
+
+```julia
+p_i = 1.0
+k = 1
+b = 1
+@show N
+@show N_ks
+```
+
+```julia
+# one cohort
+cohorts = (N, ) # cohorts
+b_bar = length(cohorts) # number of cohorts
+p_cohorts = fill(1.0, k_bar, b_bar)
+f = fill(1/((N+1)^b_bar), (N+1)^b_bar); # awareness set distribution
+params = merge(params, (cohorts = cohorts, N_ks = N_ks))
+@btime demand(p_i, k, b, p_cohorts, f, params)
+```
+
+```julia
+# two cohorts
+cohorts_2 = (N, N, ) # cohorts
+b_bar = length(cohorts_2) # number of cohorts
+p_cohorts_2 = fill(1.0, k_bar, b_bar)
+f_cohorts_2 = fill(1/((N+1)^b_bar), (N+1)^b_bar); # awareness set distribution
+params_cohorts_2 = merge(params, (cohorts = cohorts_2, N_ks = N_ks))
+@btime demand(p_i, k, b, p_cohorts_2, f_cohorts_2, params_cohorts_2)
+```
+
+```julia
+# three cohorts
+cohorts_3 = (N, N, N, ) # cohorts
+b_bar = length(cohorts_3) # number of cohorts
+p_cohorts_3 = fill(1.0, k_bar, b_bar)
+f_cohorts_3 = fill(1/((N+1)^b_bar), (N+1)^b_bar); # awareness set distribution
+params_cohorts_3 = merge(params, (cohorts = cohorts_3, N_ks = N_ks))
+@btime demand(p_i, k, b, p_cohorts_3, f_cohorts_3, params_cohorts_3)
+```
+
+```julia
+# # four cohorts (can be extremely slow; uncomment it run this cell twice instead of using @btime)
+# cohorts_4 = (N, N, N, N, ) # cohorts
+# b_bar = length(cohorts_4) # number of cohorts
+# p_cohorts_4 = fill(1.0, k_bar, b_bar)
+# f_cohorts_4 = fill(1/((N+1)^b_bar), (N+1)^b_bar); # awareness set distribution
+# params_cohorts_4 = merge(params, (cohorts = cohorts_4,))
+# @time demand(p_i, k, b, p_cohorts_4, f_cohorts_4, params_cohorts_4)
+```
