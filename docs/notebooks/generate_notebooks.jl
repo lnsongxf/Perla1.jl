@@ -1,5 +1,4 @@
-using Pkg 
-pkg"add https://github.com/arnavs/Weave.jl" # version of Weave that supports notebook
+using Pkg
 using Weave
 
 pkg"activate .." # activate main Perla1 repository
