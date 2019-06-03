@@ -11,7 +11,6 @@ include("demand/params.jl")
 include("demand/demand.jl")
 include("demand/profit.jl")
 include("demand/equilibrium.jl")
-include("util/flatten.jl")
 
 export solve_transition_dynamics
 export params_demand_default_base, params_demand_default_symmetric, params_demand_default_asymmetric_single_cohort, params_demand_default_asymmetric

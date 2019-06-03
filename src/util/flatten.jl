@@ -1,1 +1,0 @@
-flatten(x) = collect(Iterators.flatten(x)) # vectorize matrix
