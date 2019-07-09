@@ -1,0 +1,133 @@
+
+```julia
+using OffsetArrays, Parameters, Plots, ForwardDiff, NLsolve, SpecialFunctions
+using ForwardDiff: jacobian, derivative
+using Perla1
+gr(fmt = :png);
+```
+
+# Model specification
+
+```julia
+params = params_demand_default_asymmetric_single_cohort()
+```
+
+```julia
+N = sum(params.N_ks)
+k_bar = length(params.N_ks)
+f = fill(1/(N+1), (N+1)); # awareness set distribution
+```
+
+# Demand function with 2-type firms
+
+```julia
+k = 1 # the quality type firm i belongs to
+p = fill(1.0, k_bar); # k_bar-vector of prices
+```
+
+### Demand with 2-type under a single cohort
+
+Consider firms belonging to one of the two types $L$ and $H$ with different qualities $q_L$ and $q_H$. An awareness set can be represented as $n = (N_L, N_H)$ where $N_L$ and $N_H$ denote the number of firms awared from $L$ and $H$ types respectively.
+
+Given the awareness set distribution $f$, firm $i$ on $H$ type faces demand
+$$
+y_{i}(p_i, p_{-i}, f)
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_H^{1/\sigma}p_i^{-1/\sigma - 1}\, \cdot \\
+\sum_{n \in \mathcal{N} } f_n   \sum_{n_H =1}^n
+\dfrac{n_H}{N_H}  \dfrac{\binom{N_H}{n_H} \binom{N_L}{n - n_H}}{\binom{N_H + N_L}{n}}
+\left(
+n_H \left( \dfrac{p_{H}}{q_{H}}   \right)^{-1/\sigma} +
+(n - n_H) \left( \dfrac{p_{L}}{q_{L}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{H} }{ q_H^{-1/\sigma }}
+\right)^{\sigma (\kappa - 1)-1}
+$$
+
+```julia
+demand = demand_asymmetric_single_cohort
+profit = get_profit(demand)
+profit_derivative = get_profit_derivative(profit)
+```
+
+
+## Plots
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> demand(p_i, k, p, f, params))).(1:k_bar),
+    label = string.("k = ",1:k_bar), lw = 3, title = "Demand function on p_i (fixing other's p = 1.0)")
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("k = ",1:k_bar), lw = 3, title = "Profit function on p_i (fixing other's p = 1.0)")
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit_derivative(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("k = ",1:k_bar), lw = 3, title = "Derivative of profit function on p_i (fixing other's p = 1.0)")
+```
+
+# Nash equilibria
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p
+```
+
+## Plots
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i, under NE")
+plot!(p, st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+## Scenario 2: all firms are awared
+
+```julia
+f = [fill(.0, N); 1]; # the last state is n = N, where all firms are awared
+```
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i, under NE")
+plot!(p, st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+## Scenario 3: only one single firm is awared
+
+```julia
+f = [0; 1; fill(.0, N-1)]; # the second state is n = 1, where a single firm is awared
+```
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i, under NE")
+plot!(p, st = :vline, lw = 3, label = "equilibrium prices")
+```
+
+## Scenario 4: the number of firms are doubled
+
+```julia
+N_ks = (20, 20) # number of firms per type
+N = sum(N_ks)
+cohorts = (N, ) # cohorts
+f = fill(1/(N+1), N+1); # awareness set distribution
+params = merge(params, (cohorts = cohorts, N_ks = N_ks));
+```
+
+```julia
+p = compute_price_equilibrium(f, params, profit).p
+```
+
+```julia
+plot(range(1.0,stop=3.0,length=100), (k -> (p_i -> profit(p_i, k, 1, p, f, params))).(1:k_bar),
+    label = string.("b = ",1:k_bar), lw = 3, title = "Profit function on p_i, under NE")
+plot!(p, st = :vline, lw = 3, label = "equilibrium prices")
+```

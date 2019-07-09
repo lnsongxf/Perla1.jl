@@ -1,0 +1,219 @@
+
+```julia
+using Perla1, DataFrames, DataFramesMeta, CSV
+```
+
+```julia
+using Plots
+gr(fmt = :png)
+```
+
+```julia
+δ_Ms = range(0.0225, 0.18, length = 40)
+σs = range(0.05, 0.5, length = 40)
+θs = range(0.02, 0.10, length = 40)
+params_default = stationary_params_default()
+settings = stationary_settings_default()
+```
+
+# Baseline results
+
+```julia
+labor_shares = zeros(0)
+capital_shares = zeros(0)
+profit_shares = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+Zs = zeros(0)
+ks = zeros(0)
+Ms = zeros(0)
+
+# solve steady states
+params = params_default
+ss = steadystate(params, settings)
+
+append!(labor_shares, ss.labor_share)
+append!(capital_shares, ss.capital_share)
+append!(profit_shares, ss.profit_share)
+append!(Qs, ss.Q)
+append!(Bs, ss.B)
+append!(Zs, ss.Z)
+append!(ks, ss.k)
+append!(Ms, ss.M)
+
+steady_states_baseline = DataFrame(δ_M = params_default.δ_M, 
+    σ = params_default.σ, 
+    θ = params_default.θ,
+    labor_share = labor_shares, 
+    capital_share = capital_shares, 
+    profit_share = profit_shares,
+    Q = Qs, B = Bs, Z = Zs, k = ks, M = Ms)
+steady_states_baseline.change_by = "baseline";
+```
+
+# Results by `δ_M`
+
+```julia
+labor_shares = zeros(0)
+capital_shares = zeros(0)
+profit_shares = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+Zs = zeros(0)
+ks = zeros(0)
+Ms = zeros(0)
+for δ_M in δ_Ms
+    # fix other parameters other than δ_M
+    params = merge(params_default, (δ_M = δ_M, ))
+    ss = steadystate(params, settings)
+    
+    append!(labor_shares, ss.labor_share)
+    append!(capital_shares, ss.capital_share)
+    append!(profit_shares, ss.profit_share)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(Zs, ss.Z)
+    append!(ks, ss.k)
+    append!(Ms, ss.M)
+end
+
+steady_states_by_δ_M = DataFrame(δ_M = δ_Ms, 
+    σ = params_default.σ, 
+    θ = params_default.θ,
+    labor_share = labor_shares, 
+    capital_share = capital_shares, 
+    profit_share = profit_shares,
+    Q = Qs, B = Bs, Z = Zs, k = ks, M = Ms)
+steady_states_by_δ_M.change_by = "delta_M";
+```
+
+```julia
+plot(δ_Ms, [labor_shares capital_shares profit_shares], 
+    label = ["labor_share", "capital_share", "profit_share"], 
+    title = "shares by delta_M", lw = 3)
+```
+
+```julia
+plot1 = plot(δ_Ms, Qs, label = "Q", lw = 3)
+plot2 = plot(δ_Ms, Zs, label = "Z", lw = 3)
+plot3 = plot(δ_Ms, ks, label = "k", lw = 3)
+plot4 = plot(δ_Ms, Ms, label = "M", lw = 3)
+plot(plot1, plot2, plot3, plot4, layout=(2,2), size = (800, 400))
+```
+
+# Results by `σ`
+
+```julia
+labor_shares = zeros(0)
+capital_shares = zeros(0)
+profit_shares = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+Zs = zeros(0)
+ks = zeros(0)
+Ms = zeros(0)
+for σ in σs
+    # fix other parameters other than σ
+    params = merge(params_default, (σ = σ, ))
+    ss = steadystate(params, settings)
+
+    append!(labor_shares, ss.labor_share)
+    append!(capital_shares, ss.capital_share)
+    append!(profit_shares, ss.profit_share)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(Zs, ss.Z)
+    append!(ks, ss.k)
+    append!(Ms, ss.M)
+end
+
+steady_states_by_σ = DataFrame(δ_M = params_default.δ_M, 
+    σ = σs, 
+    θ = params_default.θ,
+    labor_share = labor_shares, 
+    capital_share = capital_shares, 
+    profit_share = profit_shares,
+    Q = Qs, B = Bs, Z = Zs, k = ks, M = Ms)
+steady_states_by_σ.change_by = "sigma";
+```
+
+```julia
+plot(σs, [labor_shares capital_shares profit_shares], 
+    label = ["labor_share", "capital_share", "profit_share"], 
+    title = "shares by sigma", lw = 3)
+```
+
+```julia
+plot1 = plot(σs, Qs, label = "Q", lw = 3)
+plot2 = plot(σs, Zs, label = "Z", lw = 3)
+plot3 = plot(σs, ks, label = "k", lw = 3)
+plot4 = plot(σs, Ms, label = "M", lw = 3)
+plot(plot1, plot2, plot3, plot4, layout=(2,2), size = (800, 400))
+```
+
+# Results by `θ`
+
+```julia
+labor_shares = zeros(0)
+capital_shares = zeros(0)
+profit_shares = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+Zs = zeros(0)
+ks = zeros(0)
+Ms = zeros(0)
+for θ in θs
+    # fix other parameters other than θ
+    params = merge(params_default, (θ = θ, ))
+    ss = steadystate(params, settings)
+
+    append!(labor_shares, ss.labor_share)
+    append!(capital_shares, ss.capital_share)
+    append!(profit_shares, ss.profit_share)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(Zs, ss.Z)
+    append!(ks, ss.k)
+    append!(Ms, ss.M)
+end
+
+steady_states_by_θ = DataFrame(δ_M = params_default.δ_M, 
+    σ = params_default.σ, 
+    θ = θs,
+    labor_share = labor_shares, 
+    capital_share = capital_shares, 
+    profit_share = profit_shares,
+    Q = Qs, B = Bs, Z = Zs, k = ks, M = Ms)
+steady_states_by_θ.change_by = "theta";
+```
+
+```julia
+plot(σs, [labor_shares capital_shares profit_shares], 
+    label = ["labor_share", "capital_share", "profit_share"], 
+    title = "shares by theta", lw = 3)
+```
+
+```julia
+plot1 = plot(θs, Qs, label = "Q", lw = 3)
+plot2 = plot(θs, Zs, label = "Z", lw = 3)
+plot3 = plot(θs, ks, label = "k", lw = 3)
+plot4 = plot(θs, Ms, label = "M", lw = 3)
+plot(plot1, plot2, plot3, plot4, layout=(2,2), size = (800, 400))
+```
+
+# Write CSV
+
+```julia
+steady_states = deepcopy(steady_states_by_δ_M)
+append!(steady_states, steady_states_by_σ)
+append!(steady_states, steady_states_by_θ)
+append!(steady_states, steady_states_baseline)
+
+# change unicode column names to English
+rename!(steady_states, :δ_M => :delta_M)
+rename!(steady_states, :σ => :sigma)
+rename!(steady_states, :θ => :theta)
+
+CSV.write("exogenous_comparative_statics.csv", steady_states)
+steady_states
+```

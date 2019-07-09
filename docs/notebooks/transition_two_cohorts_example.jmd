@@ -1,0 +1,51 @@
+
+```julia
+using LinearAlgebra, Test, DifferentialEquations, SparseArrays, Plots, Parameters, OffsetArrays
+using Perla1, DiffEqOperators
+gr(fmt = :png)
+```
+
+```julia
+# two firms per cohort
+t_2 = 1.0
+θ_1 = 0.3
+θ_2 = 0.4
+θ(t) = t < t_2 ? θ_1 : θ_2
+t = 0.0
+N = 2
+T = 25.0
+cohorts = (N, N)
+ζ = 0.0
+params = (θ = θ, cohorts = cohorts, ts_cohort = [t_2], ζ = ζ)
+f_0 = [1.0; fill(0.0, (N+1)^2-1)];
+```
+
+# Using matrix free operators
+
+```julia
+K = length(cohorts)
+setsize = (N+1)^K;
+O! = get_transition_operator(params)
+```
+
+```julia
+# solve the corresponding ODE
+sol_awareness_matrix_free = solve_transition_dynamics(O!, params, f_0, T)
+
+# convert to the counting solution
+f0_awareness_matrix_free(a) = sol_awareness_matrix_free(a)[1] # no product
+# 1.1 or 2.1
+f1_awareness_matrix_free(a) = sol_awareness_matrix_free(a)[2] + sol_awareness_matrix_free(a)[4]
+# 1.1+1.2 or 1.1+2.1 or 2.1+2.2
+f2_awareness_matrix_free(a) = sol_awareness_matrix_free(a)[3] + sol_awareness_matrix_free(a)[5] + sol_awareness_matrix_free(a)[7]
+# 1.1+1.2+2.1 or 1.1+2.1+2.2
+f3_awareness_matrix_free(a) = sol_awareness_matrix_free(a)[6] + sol_awareness_matrix_free(a)[8]
+# 1.1+1.2+2.1+2.2
+f4_awareness_matrix_free(a) = sol_awareness_matrix_free(a)[9]
+
+# plot
+plot(0:0.01:T, [f0_awareness_matrix_free, f1_awareness_matrix_free, f2_awareness_matrix_free,
+        f3_awareness_matrix_free, f4_awareness_matrix_free],linewidth=5,
+    title="Solution (using awareness set transition)",
+     xaxis="t",yaxis="f(t)",label=["f0" "f1" "f2" "f3" "f4"])
+```

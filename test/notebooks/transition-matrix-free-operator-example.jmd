@@ -1,0 +1,75 @@
+
+```julia
+using DiffEqOperators, OrdinaryDiffEq, LinearAlgebra
+
+# TransitionModel defn
+struct TransitionModel
+    A # transition matrix
+    args
+    t # current time
+end
+
+function (M::TransitionModel)(du, u, p, t)
+    LinearAlgebra.mul!(du, M, u)
+end
+
+# overload methods for matrix analogy
+LinearAlgebra.size(m::TransitionModel, i::Int64) = size(m.A, i)
+LinearAlgebra.ishermitian(m::TransitionModel) = ishermitian(m.A)
+transition_dynamics!(y, m::TransitionModel, b) = mul!(y, m.A, b)
+function transition_dynamics!(Y, m::TransitionModel, B::AbstractMatrix{T}) where {T} 
+    N = size(A,1)
+    for j in 1:(N+1)
+        Y[:,j] = mul!(similar(B[:,j]), m, B[:,j])
+    end    
+end
+LinearAlgebra.opnorm(m::TransitionModel, p) = opnorm(m.A, p)
+
+# solution setup
+T = 1
+ts = 0:0.1:T
+f_0 = [1.0; 0.0; 0.0]
+```
+
+### Models with time-independent operators
+
+```julia
+# model specs
+A = [[-0.5 0.25 0.25]; [-0.5 0.0 0.5]; [0.0 -0.5 0.5]]
+model = TransitionModel(A, nothing, 0.0)
+
+# solve
+prob = ODEProblem(MatrixFreeOperator((du,u)->transition_dynamics!(du, model, u)),f_0,(0.0,T))
+solve(prob, LawsonEuler(krylov=true, m=5), dt=0.1)
+```
+
+### Models with time-dependent operators
+
+```julia
+# model specs
+A = [[-0.5 0.25 0.25]; [-0.5 0.0 0.5]; [0.0 -0.5 0.5]]
+model = TransitionModel(A, nothing, 0.0)
+
+# operator
+function generate_operator(m::TransitionModel) 
+    function awareness_operator_basis(du,u,p,t)
+        m.t = t
+        transition_dynamics!(du, m, u)
+    end
+    function awareness_operator_basis(du,u)
+        transition_dynamics!(du, m, u)
+    end
+    operator = MatrixFreeOperator(awareness_operator_basis, nothing)
+    return operator
+end
+
+operator = generate_operator(model) 
+Base.size(::typeof(operator), n) = Base.size(model, n)
+LinearAlgebra.opnorm(::typeof(operator), n::Real) = LinearAlgebra.opnorm(model, n)
+LinearAlgebra.ishermitian(::typeof(operator)) = LinearAlgebra.ishermitian(model)
+DiffEqBase.isinplace(::typeof(operator), num) = true
+
+# prob = SplitODEProblem(operator, (du,u,p,t)->0, f_0, (0.0,T))
+prob = ODEProblem(operator,f_0,(0.0,T))
+solve(prob, LawsonEuler(krylov=true, m=5), dt=0.1)
+```

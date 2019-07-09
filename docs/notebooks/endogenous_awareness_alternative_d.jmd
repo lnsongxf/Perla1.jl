@@ -1,0 +1,162 @@
+
+```julia
+using Perla1, DataFrames, DataFramesMeta, CSV, Parameters
+```
+
+```julia
+using Plots
+gr(fmt = :png)
+```
+
+```julia
+η_default = 0.1
+ηs = range(1e-8, 5e-1, length = 10)
+νs = range(0.01, 0.05, length = 10)
+δ_Ms = range(0.0225, 0.2, length = 10)
+settings = stationary_settings_default()
+industry_settings = merge(stationary_settings_default(),
+    industry_settings_default(μ_bounds = (params -> [1.0; 1.1]), ftol = 1e-4))
+
+function d_alt(θ_i, μ_i, params)
+    @unpack η, ν, ϕ = params
+    return (θ_i^2)/ ν+  1/η *(μ_i-1.0)^2
+end
+```
+
+# Results by `η`
+
+```julia
+θs = zeros(0)
+μs = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+profit_shares = zeros(0)
+
+for η in ηs
+    # fix other parameters other than δ_M
+    params = stationary_params_default()
+    industry_params = merge(industry_params_default(η = η, d = d_alt), params)
+    ss_aggregate = steadystate(params, settings)
+    @time sol = industry_equilibrium(ss_aggregate, industry_params, industry_settings)
+    
+    θ = sol.zero[1]
+    μ = sol.zero[2]
+    ss = steadystate(merge(params, (θ = θ, μ = μ)), settings)
+    
+    append!(θs, θ)
+    append!(μs, μ)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(profit_shares, ss.profit_share)
+end
+```
+
+```julia
+results_by_ηs = DataFrame(η = ηs,
+    ν = industry_params_default().ν,
+    δ_M = stationary_params_default().δ_M,
+    θ = θs,
+    μ = μs,
+    Q = Qs, B = Bs, 
+    profit_share = profit_shares)
+results_by_ηs.change_by = "eta";
+results_by_ηs
+```
+
+# Results by `ν`
+
+```julia
+θs = zeros(0)
+μs = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+profit_shares = zeros(0)
+
+for ν in νs
+    # fix other parameters other than δ_M
+    params = stationary_params_default()
+    industry_params = merge(industry_params_default(η = η_default, d = d_alt, ν = ν), params)
+    ss_aggregate = steadystate(params, settings)
+    @time sol = industry_equilibrium(ss_aggregate, industry_params, industry_settings)
+    
+    θ = sol.zero[1]
+    μ = sol.zero[2]
+    ss = steadystate(merge(params, (θ = θ, μ = μ)), settings)
+    
+    append!(θs, θ)
+    append!(μs, μ)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(profit_shares, ss.profit_share)
+end
+```
+
+```julia
+results_by_νs = DataFrame(η = η_default,
+    ν = νs,
+    δ_M = stationary_params_default().δ_M,
+    θ = θs,
+    μ = μs,
+    Q = Qs, B = Bs, 
+    profit_share = profit_shares)
+results_by_νs.change_by = "nu";
+results_by_νs
+```
+
+# Results by `δ_M `
+
+```julia
+θs = zeros(0)
+μs = zeros(0)
+Qs = zeros(0)
+Bs = zeros(0)
+profit_shares = zeros(0)
+
+for δ_M in δ_Ms
+    # fix other parameters other than δ_M
+    params = stationary_params_default(δ_M = δ_M)
+    industry_params = merge(industry_params_default(η = η_default, d = d_alt), params)
+    ss_aggregate = steadystate(params, settings)
+    @time sol = industry_equilibrium(ss_aggregate, industry_params, industry_settings)
+    
+    θ = sol.zero[1]
+    μ = sol.zero[2]
+    ss = steadystate(merge(params, (θ = θ, μ = μ)), settings)
+    
+    append!(θs, θ)
+    append!(μs, μ)
+    append!(Qs, ss.Q)
+    append!(Bs, ss.B)
+    append!(profit_shares, ss.profit_share)
+end
+```
+
+```julia
+results_by_δ_Ms = DataFrame(η = η_default,
+    ν = industry_params_default().ν,
+    δ_M = δ_Ms,
+    θ = θs,
+    μ = μs,
+    Q = Qs, B = Bs, 
+    profit_share = profit_shares)
+results_by_δ_Ms.change_by = "delta_M";
+results_by_δ_Ms
+```
+
+# Write CSV
+
+```julia
+equilibriums = deepcopy(results_by_ηs)
+append!(equilibriums, results_by_νs)
+append!(equilibriums, results_by_δ_Ms)
+
+# change unicode column names to English
+rename!(equilibriums, :η => :eta)
+rename!(equilibriums, :ν => :nu)
+rename!(equilibriums, :δ_M => :delta_M)
+rename!(equilibriums, :μ => :mu)
+rename!(equilibriums, :θ => :theta)
+
+CSV.write("industry-equilibrium-alternative-d.csv", equilibriums)
+equilibriums
+```

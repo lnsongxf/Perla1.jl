@@ -1,0 +1,368 @@
+% !TEX program = pdflatex
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,amsopn,amstext,thmtools,setspace,ifthen,tabularx}
+\usepackage{bbm,dsfont,lmodern,accents} %Display packages
+\usepackage[T1]{fontenc}
+\usepackage[nohead]{geometry}
+\usepackage{xr-hyper}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[bookmarks=false,
+	pdfstartview={FitV},
+	pdftitle={A Model of Product Awareness and Industry Life Cycle},
+	pdfauthor={Jesse Perla},
+	pdfcreator={Jesse Perla},
+	pdfkeywords={Macroeconomics, Firm Growth, Firm Dynamics, Firm Heterogeneity, Industry Equilibrium, Industry Life Cycle, Product Differentiation},
+	pdfsubject={Macroeconomics},
+	colorlinks=true,
+	linkcolor=darkgray,
+	citecolor=darkgray,
+	urlcolor=darkgray,
+	filecolor=darkgray,
+	anchorcolor=darkgray, 
+	breaklinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{equation}{}{}
+\crefname{assumption}{Assumption}{Assumptions}
+\crefname{property}{Property}{Properties}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\declaretheorem[numbered=yes]{definition}
+\newtheorem{example}{Example}
+\newtheorem{proposition}{Proposition}
+\newtheorem{assumption}{Assumption}
+
+%%%%%%%%%%%% Macros%%%%%%
+% \newcommand{\includepsfragfig}[5][width=\columnwidth] {%
+% 	\begin{figure}[!htp]%
+% 		\centering		
+% 		\psfragfig[#1]{#2}{#5} %	
+% 		\ifthenelse{\equal{#3}{}}{}{\caption{#3}} % Conditionally shows the caption
+% 		\ifthenelse{\equal{#4}{}}{}{\label{#4}} % Conditionally shows the alabel
+% 	\end{figure}
+% }
+\newcommand{\set}[1]{\ensuremath{\left\{{#1}\right\}}}
+\newcommand{\pd}[2]{\ensuremath{\frac{\partial#1}{\partial#2}}}
+\newcommand{\tpd}[2]{\ensuremath{\tfrac{\partial#1}{\partial#2}}}
+\newcommand{\R}{\ensuremath{\mathbb{R}}}
+\newcommand{\N}[1][]{\ensuremath{\mathbb{N_{#1}}}}
+\newcommand{\Q}[0]{\ensuremath{\mathbb{Q}}}
+\newcommand{\D}[1][]{\ensuremath{\boldsymbol{\partial}_{#1}}}
+\newcommand{\st}[0]{\,\text{s.t.}\,}
+\newcommand{\ow}[0]{\,\text{o.w.}\,}
+\newcommand{\prob}[2][]{\ensuremath{\mathbb{P}_{#1}\left( {#2} \right)}}
+\newcommand{\cprob}[2]{\ensuremath{\mathbb{P}\left( {#1}\left| {#2} \right. \right)}}
+\newcommand{\expec}[2][]{\ensuremath{\mathbb{E}_{{#1}}\left[ {#2} \right]}}
+\newcommand{\condexpec}[3][]{\ensuremath{\mathbb{E}_{#1}\left[{#2} \; \middle| \; {#3} \right]}}
+\newcommand{\diff}{\ensuremath{\mathrm{d}}}
+\newcommand{\indicator}[1]{\ensuremath{\mathds{1}\left\{{#1}\right\}}}
+\newcommand{\abs}[1]{\ensuremath{\left| {#1}\right|}}
+\newcommand{\argmax}[2]{\ensuremath{\mathrm{arg} \max_{{#1}}\left\{ {#2} \right\}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\geometry{left=1in,right=1in,top=0.6in,bottom=1in}
+
+\interfootnotelinepenalty=1000
+
+\onehalfspacing
+\begin{document}
+\title{\Large A Model of Product Awareness and Industry Life Cycles\\
+Online Computational  Appendix
+}
+\author{Jesse Perla \\ University of British Columbia}
+\date{Draft Date: \today}
+\maketitle
+\appendix
+% \makeatletter
+% \def\@seccntformat#1{Appendix\ \csname the#1\endcsname\quad}
+% \makeatother
+% \makeatletter
+% \def\@seccntformat#1{\csname Pref@#1\endcsname \csname the#1\endcsname\quad}
+% \def\Pref@section{Appendix~}
+% \makeatother
+\numberwithin{equation}{section}
+\section{Stationary Solution}\label{sec:stationary-exogenous}
+This section describes the calculation of the aggregation dynamics for an arbitrary (but exogenous) symmetric awareness process as defined by a model intrinsic $\Q$.  The other parameters are $z_M, \kappa, \alpha, \sigma, \rho, \delta_k,$ and $\delta_M$.  See \cref{sec:calibration}
+
+The generator for the markov chain, $\Q$, can be both age-varying and even nonlinear (i.e. the probabilities can depend on the current distribution), but must be independent of the aggregate state and $t$ index.
+
+\subsection{Industry Age Distribution}
+To start, we will only look at stationary age distribution.  Given the obsolescence rate $\delta_M > 0$, the steady state age distribution is 
+\begin{align}
+\Phi(a) &= 1 - e^{-\delta_M a}
+\end{align}
+
+This distribution will be used for calculating expectations over ages, so choose a set of Gaussian quadrature points $\vec{a}$ and associated Gauss-Laguerre weights (see \url{https://quantecon.github.io/Expectations.jl/latest/}) $\omega$ such that $\expec{H(a)} \approx \omega \cdot H(\vec{a})$.
+
+\subsection{Markov Chain Dynamics}
+Unlike the model with endogenous awareness, we can solve for the dynamics of choice set evolution for industries of a given age separately from the rest of the equilibrium.
+
+For the given $\Q$, from $f(0) = \begin{bmatrix}1 & 0 & \ldots & 0\end{bmatrix}$ numerically solve the ODE to find the evolution of the steady state.
+\begin{align}
+	\D[a]f(a) &= f(a) \cdot \Q(f, a),\quad \text{given initial condition } f(0)\in\R^{N+1}\label{eq:f-evolution-ode}
+\end{align}
+
+This is written in a general and nonlinear form.  With the simplification that $\Q$ is independent of both industry age $a$ and the existing distribution, the ODE is linear, time-invariant, and can be solved by matrix-exponentials by taking the transpose of the $\Q$ matrix and reinterpretting the $f(a)$ vector as a row rather than a column vector,  i.e.
+\begin{align}
+	\D[a]f(a) &= \Q^T \cdot f(a),\quad \text{given initial condition } f(0)\in\R^{N+1}\label{eq:f-evolution-ode}
+\end{align}
+We will only need to find the solution at ages in the $\vec{a}$ vector and will use quadrature rules betwen the nodes.   Given the $f(a)$ solution, we can calculate the summary statistics.  First, note that $f_0(a)$ is simply the first element in the matrix.  %Otherwise note that expectations of $\hat{n}$ are calculated with
+% \begin{align}
+% 	\expec[a]{g(\hat{n})} &\equiv \sum_{n=1}^{N}\frac{f_n(a)}{1 - f_0(a)} g(n)\\
+% 	\intertext{Or,}
+% 	\hat{f}(a) &\equiv \set{f_n(a) / (1 - f_0(a))}_{n=1}^N\\
+% 	\hat{g}&\equiv \set{g(n)}_{n=1}^N\\
+% 	\expec[a]{g(\hat{n})} &\equiv \hat{f}(a) \cdot \hat{g}\\
+% \end{align}
+
+Use this to find the following for all $a \in \vec{a}$: $f_0(a)$, $\expec[a]{\hat{n}^{\sigma(\kappa - 1)}}$, $\expec[a]{\hat{n}^{\sigma(\kappa - 1)-1}}$
+
+\subsection{Static Calculations}
+Along the $\vec{a}$ grid, use the moments above to calculate
+\begin{align}
+	q(a) &\equiv \expec[a]{\hat{n}^{\sigma(\kappa - 1)}}\label{eq:a-Q-def}\\
+	\Upsilon(a)	&\equiv 1 + \sigma\left[{1 - (1-\sigma(\kappa-1))\frac{\expec[a]{\hat{n}^{\sigma ( \kappa - 1) -1}}}{\expec[a]{\hat{n}^{\sigma ( \kappa - 1)}}}} \right]^{-1}\label{eq:markup-def}
+\end{align}
+
+Alternatively, if the distribution is distorted by $\mu \neq 1$ then,
+
+\begin{align}
+	\Psi(\mu,\hat{n}) &\equiv \mu + (\hat{n} - 1)(2 - \mu)\label{eq:Psi-def}\\
+	q(a) &\equiv \expec[a]{ \Psi(\mu, \hat{n})^{\sigma(\kappa - 1)}}\label{eq:q-def-asy}\\
+	\Upsilon(a) &\equiv 	1 + \sigma\left[{1 - \mu(1-\sigma(\kappa-1))\frac{\expec[a]{\hat{n}\Psi(\mu, \hat{n})^{\sigma ( \kappa - 1) -2}}}{\expec[a]{\hat{n}\Psi(\mu, \hat{n})^{\sigma ( \kappa - 1)-1}}}} \right]^{-1}\label{eq:markup-def-asym}
+\end{align}
+Where \cref{eq:q-def-asy,eq:markup-def-asym} nest \cref{eq:a-Q-def,eq:markup-def} when $\mu = 1$
+
+
+With those calculations, we can use Gauss-Laguerre quadrature to calculate the integral over the stationary $\Phi$ distribution,
+\begin{align}
+	Q &\equiv \left[\expec{(1 - f_0(a)) \Upsilon(a)^{1-\kappa} q(a)}\right]^{\frac{1}{\kappa-1}}\label{eq:Q-def}\\
+	B &\equiv \frac{\expec{(1-f_0(a))\Upsilon(a)^{-\kappa}q(a)}}{\expec{(1 - f_0(a)) \Upsilon(a)^{1-\kappa} q(a)}}\label{eq:B-def}
+\end{align}
+
+\subsection{Dynamic Equilibrium}
+Given the $Q$ and $B$, solve the system of equations for $k$ and $M$, from Proposition 6,
+\begin{align}
+	\delta_M - \delta_k &= Q B^{-1} k^{\alpha}M^{\frac{1}{\kappa - 1}}\left(\frac{z_M}{\kappa - 1}M^{-1} - \alpha k^{-1} \right)\label{eq:zeta-implicit-stationary}\\
+   \rho  +  \delta_k &= \alpha Q B^{-1} M^{\frac{1}{\kappa - 1}}k^{\alpha-1}\label{eq:k-M-stationary}
+  \end{align}
+
+Some post-calculation quantities include,
+\begin{align}
+C &= Q B^{-1} M^{\frac{1}{\kappa - 1}} k^{\alpha} - \delta_k k - \delta_M M /z_M\\
+\text{capital share} &= \alpha B\\
+\text{labor share} &= (1-\alpha) B\\
+\text{profit share} &= 1 - B\\
+mc &= M^{\frac{1}{\kappa - 1}}Q\label{eq:mc-def}\\
+Z &\equiv M^{\frac{1}{\kappa - 1}} Q B^{-1}\label{eq:Z-def}\\
+w &= (1-\alpha)Z B k ^{\alpha}\\
+Y &= Z k ^{\alpha} \\
+		\text{Tobin's Q} &= 1 + \frac{1 - B}{1 - r} \frac{Y}{k} \\
+v_0 &\equiv \int_0^{\infty}e^{-(\rho + \delta_M)a} \, (p(a) - mc)\mu Y\frac{1 - f_0(a)}{N}p(a)^{-\kappa}\expec[a]{\hat{n}\Psi(\mu, \hat{n})^{\sigma ( \kappa - 1)-1}}\diff a
+\end{align}
+with $r = \rho + \delta_M$.
+
+\section{Stationary Industry Equilbrium (Endogenous)}
+This section extends \cref{sec:stationary-exogenous} to implement the model with endogenous choice of $\mu$ and $\theta$ for a particular industry, taking the aggregates (i.e. $Y$ and $mc$) as given.
+
+\paragraph{Aggregate Solution given Symmetric Policies}
+First, assume symmetric policies for all firms of $(\theta, \mu)$.  The $\Q(\theta)$ depends on the $\theta$ parameter, which is now endogenous to the model for the particular industry.  Otherwise, the process is left fully general.  Given the $\theta$ choice, the expectation of awareness is the same as before
+\begin{align}
+	\D[a]f(a) &= f(a) \cdot \Q(f, a|\theta)\label{eq:endogenous-evolution}
+\end{align}
+
+\paragraph{Off-Equilibrium Pricing and Profits}
+In order to solve for the optional $\theta$ and $\mu$ choices, we need to calculate off-equilibrium pricing strategy and profits of a firm deviating from the symmetric industry equilibria.  Consider the behavior of an individual firm, take as given the $(\theta, \mu)$ of the symmetric equilibrium and the aggregate $Y$ and $mc$ from aggregates.  The symmetric price strategy of the industry is then
+\begin{align}
+	p(a | \theta, \mu) &= \Upsilon(a | \theta, \mu) mc \label{eq:p-endogenous}	
+\end{align}
+
+Given the symmetric $p(a), \theta, \mu$ choices of all other firms and a possible deviation $\mu_i$ for firm $i$, the optimal response $p_i(a)$ for each $a$ is calculated from the solution to the nonlinear equation
+\begin{align}
+	0 &= (-p_i + mc + \sigma\,mc)g(p_i,p, \mu_i, \mu)+ p_i(p_i-mc)\sigma \D[p_i]g(p_i,p, \mu_i, \mu)\label{eq:off-equilibrium-price}		\\
+	\intertext{Where,}
+	\hat{\Psi}(p_i, p, \mu_i, \mu, \hat{n}) &\equiv \Psi(\mu, \hat{n}) + \mu_i \left(\tfrac{p_i}{p}\right)^{\text{-}1/\sigma} - \mu\label{eq:Psi-hat-def}\\	
+	g(p_i,p, \mu_i, \mu) &= p^{1/\sigma - \kappa + 1}\expec[a]{\hat{n}\hat{\Psi}(p_i, p, \mu_i, \mu, \hat{n})^{\sigma(\kappa-1)-1}}\label{eq:g-off}\\
+	\D[p_i]g(p_i,p, \mu_i, \mu) &= \frac{\mu_i (1-\sigma(\kappa - 1))}{\sigma}p^{1/\sigma-\kappa}\left(\frac{p_i}{p}\right)^{-1 - 1/\sigma}\expec[a]{ \hat{n}\hat{\Psi}(p_i, p, \mu_i, \mu, \hat{n})^{\sigma(\kappa - 1)-2} }\label{eq:D-g-off}
+\end{align}
+The solution to this equation for every $a$ on the grid provides the equilibrium path $p_i(a, \mu_i | \theta, \mu)$.  The flow profits of a firm using this strategy, while every other firm uses the symmetric strategy $p(a | \theta, \mu)$ is
+\begin{align}
+	\pi^{*}(a, \mu_i\,|\, \theta, \mu) &= \mu_i Y \, (p_i(a) - mc)\frac{1 - f_0(a|\theta)}{N}p_i(a) ^{-\kappa}\expec[a]{ \hat{n}\hat{\Psi}(p_i(a), p(a), \mu_i, \mu, \hat{n})^{\sigma(\kappa - 1)-1} }
+\end{align}
+
+
+\paragraph{Endogenous Advertising Captial}
+Define a CES advertising capital prodcution function
+\begin{align}
+d(\theta, \mu) &= \frac{1}{\nu}\left((1-\eta)\theta^{\phi} + \eta(\mu - 1)^{\phi}\right)^{\frac{2}{\phi}}
+\end{align}
+and an alternative flexible advertising capital production function
+\begin{align}
+	d(\theta, \mu) &\equiv 
+	\dfrac{1}{\nu}\theta^2 + \dfrac{1}{\eta} (\mu-1)^2
+\end{align}
+Where $\eta$ and $\nu$ are parameters.
+
+Given a discount rate of $\rho + \delta_M$ (where $\delta_M$ was the poisson death rate), the time $0$ value of a firm with a fixed $\mu_i, \theta_i$ taking as given industry $\mu, \theta$ and aggregate $mc, Y$ is
+\begin{align}
+(\theta,\mu) &= \argmax{\theta_i, \mu_i}{\int_0^{\infty}e^{-(\rho + \delta_M)a}\frac{\theta_i}{\theta}\pi^{*}(a, \mu_i\,|\, \theta, \mu) \diff a - \frac{d(\theta_i,\mu_i)}{N}}\label{eq:k-M-theta-stationary-controlled}
+\end{align}
+
+A solution to the equilibrium is a fixed point $(\theta, \mu)$ maximizing \cref{eq:k-M-theta-stationary-controlled}.  The integral in \cref{eq:k-M-theta-stationary-controlled} should be done over the same $a$ grid as in the previous solution, using the same Gauss-Laguerre quadrature points as before.\footnote{\textbf{Note:} There is no assumption of a stable saddle-point at the aggregate level (i.e. if $mc$ and $Y$ are derived from the a symmetric decision of all firms, then it may be unstable).}
+
+\paragraph{Iterative Method}
+Given a fixed aggregate $(\theta, \mu)$, calculate the aggregate steady state from \cref{sec:stationary-exogenous} to determine $Y$ and $mc$.  To make comparisons easier, we will look at comparative statics of industries where the baseline solution chooses the same $\theta, \mu$ as the aggregate.
+
+Now, from a $(\theta, \mu)$ guess for a particular industry,
+\begin{enumerate}
+	\item Use the $mc$ and $Y$ to calculate $p(a)$ on the grid for the symmetric industry, from \cref{eq:p-endogenous}
+	\item Solve the optimization problem in \cref{eq:k-M-theta-stationary-controlled} for $(\theta_i,\mu_i)$.  This will require finding the \cref{eq:off-equilibrium-price} for each point in the $a$ grid to find $p_i(a)$ prior to calculating the expected profits.  Use the quadrature nodes.
+	\item Iterate by using the $\theta_i, \mu_i$ as the new guesses for $\theta$ and $\mu$ until convergence (keeping the aggregates fixed)
+\end{enumerate}
+
+\section{Multiple Cohorts}
+To introduce multiple cohorts as an extension of the awareness sets driven entirely by a single count distribution
+\subsection{Notation and Awareness Counts}\label{sec:cohort-notation}
+\begin{itemize}
+	\item Cohorts are indexed by $ b = 1, \ldots \bar{b}$ where the symmetric case in the paper is nested with $\bar{b} = 1$
+	\item Let $a_b$ be the industry age at birth for cohort $b$.  Typically, $a_1 = 0$ since the industry starts with the first cohort.
+	\item There are $N_b$ firms in cohort $b$, but in the symmetric case with the same number of firms per cohort we will just use $N$
+	\item Given symmetric awareness evolution within a cohort, denote the set of possible awareness set counts as $\mathcal{N}$ and the cardinality of the set of awareness sets is then
+	\begin{align}
+	\mathbf{N} &\equiv \abs{\mathcal{N}} = \prod_{b = 1}^{\bar{b}}(N_b + 1)
+	\end{align}
+	\item In the example of cohorts of the same size, $\mathcal{N} \equiv \set{0, 1,\ldots N}^{\bar{b}}$
+	\item We can use $n_b \in \set{0, \ldots, N_b}$ to be an awareness set with $n_b$ firms in the awareness set size for cohort $b$.  This is a generalization of the $n$ used with a single cohort.	
+	\item The awareness state for an industry is $f(a) \in \R^{\mathbf{N}}$, which generalizes the one-cohort example in the main paper.
+	\item An element from the $\mathbf{N}$ possible awareness sets is a $n \in \mathcal{N}$
+	\begin{align}
+	n &\equiv \set{n_1, \ldots n_b, \ldots n_{\bar{b}}}
+	\end{align}
+	\item Denote a sum over all possible awareness count permutations as $\sum_{n \in \mathcal{N}}$, etc.
+\end{itemize}
+Generalizing the awareness count evolution, we now have a infinitesimal generator $Q \in \R^{\mathbf{N} \times\mathbf{N}}$ such that the evolution of awareness is
+\begin{align}
+\D[t]f(a) &= f(a) \cdot Q(a, f)
+\end{align}
+Which nests the single-cohort case and can potentially be nonlinear or time-inhomogenous
+
+\subsection{Demand Functions}
+From the main paper, define
+\begin{align}
+	\bar{\Gamma} &\equiv \Gamma(1-\sigma(\kappa-1))^{1/(1-\kappa)}
+	\intertext{With $\Gamma(\cdot)$ the gamma function.  Assume,}
+	0 &< \sigma < \frac{1}{\kappa - 1}
+\end{align}
+
+
+\paragraph{Single Cohort}
+First, repeat the general formulation of demand for arbitrary awareness sets and no symmetry, and then introduce symmetric cohorts by entry and quality level.  
+
+
+\paragraph{Multiple Cohorts of Symmetric Quality}
+Using the notation in \cref{sec:cohort-notation}, denote the quality and price of all forms in cohort $b$ as $q_b$ and $p_b$.  For deriving the demand, we will consider firm $i$ in cohort $b$ as having price $i$, so that the demand function is
+Written  in terms of cross-cohort awareness counts as
+\begin{align}
+y_{ib}(p_i, p_{-i}, f) 
+&=  \overline{\Gamma}^{1 - \kappa} \Omega q_b^{1/\sigma} p_i^{-1/\sigma-1} \dfrac{1}{N} \cdot 
+\label{eq:full-total-demand-multiple-cohorts-alternative-first} \\ 
+&\sum_{ n \in \mathcal{N} } n_b f_n \Bigg[ \sum_{b' =1 }^{\bar{b}} n_{b'} \left( \dfrac{p_{b'}}{q_{b'}}  \right)^{-1/\sigma} +   
+\dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{b}}{{ q_b^{-1/\sigma }}}  \Bigg]^{\sigma(\kappa-1) -1}
+\label{eq:full-total-demand-multiple-cohorts-alternative-second}
+\end{align}
+
+\paragraph{Demand with a Single Cohort with Two Qualities}
+
+Let $q_k$ and $p_k$ denote the quality of all firms in quality type $k \in \{H, L\}$ where $q_L \leq q_H$. $N_k$ represents the total number of firms with quality $k$. Since we consider a single cohort case, $\mathcal{N} = \{0\} \cup \mathbb{N}$. Write as 
+\begin{equation}\label{eq:full-total-demand-two-quality-alternative}
+\begin{aligned}
+& y_{ik}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
+&\sum_{n \in \mathcal{N} } f_n   \sum_{n_k =1}^n  
+n_k \dfrac{\binom{N_k}{n_k} \binom{N_{-k}}{n - n_k}}{\binom{N_H + N_L}{n}}
+\left( 
+n_k \left( \dfrac{p_{k}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_k) \left( \dfrac{p_{-k}}{q_{-k}}   \right)^{-1/\sigma} +
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{k} }{ q_k^{-1/\sigma }} 
+\right)^{\sigma (\kappa - 1)-1}
+\end{aligned}
+\end{equation}
+\paragraph{Demand with a Single Cohort with Multiple Qualities}
+The formula \eqref{eq:full-total-demand-two-quality-alternative} can be extended to multiple ${\bar k}$ quality types with arbitrary ${\bar k} > 1$. 
+
+Thus, combined with \eqref{eq:full-total-demand-multiple-quality-summand-alternative} and \eqref{eq:multiple-quality-firm-awareness-probability}, we have
+\begin{align}
+& y_{ik}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot \\ 
+&\sum_{n \in \mathcal{N} } f_n   \sum_{n_k =1}^n  
+n_k \sum_{v \in \mathcal{V}_{n_k} (n)} 
+\dfrac{\prod_{k'=1}^{\bar k} \binom{ N_{k'} }{ v_{k'} } }{\binom{N}{n}}
+\left( 
+\sum_{k' =1 }^{K} v_{k'} \left( \dfrac{p_{k'}}{q_{k'}}  \right)^{-1/\sigma} +   
+\dfrac{p_i^{-1/\sigma}   - p^{-1/\sigma}_{k} }{{ q_k^{-1/\sigma }}}
+\right)^{\sigma (\kappa - 1)-1}
+\end{align}
+
+\paragraph{Demand with Multiple Cohorts with Two Qualities}
+Consider firm $i$ of type $k \in \{H, L\}$ in cohort $b$ as having price $p_{ikb}$; the demand function firms in the other type, $L$, can be deduced symmetrically. Without loss of generality, we assume that $N_H$ and $N_L$ are fixed for all cohorts for brevity. The demand function is
+\begin{equation}\label{eq:full-total-demand-two-quality-multiple-cohort-alternative}
+\begin{aligned}
+& y_{ikb}(p_i, p_{-i}, f) 
+=  \bar{\Gamma}^{1-\kappa}\Omega \, q_k^{1/\sigma}p_i^{-1/\sigma - 1}\, \dfrac{1}{N_k} \cdot  \\ 
+& \quad \sum_{n \in \mathcal{N} } f_n   \sum_{n_k \in \mathcal{V} (n) }  
+\Bigg\{
+\left[ n_{kb} \prod_{b'=1}^{\bar b} 
+ \dfrac{\binom{N_k}{n_{kb'}} \binom{N_{-k}}{n_{b'} - n_{kb'}}}{\binom{N_H + N_L}{n_{b'}}}
+\right] \cdot \\ & \quad
+\Bigg[
+\sum_{b' = 1}^{\bar b} 
+\left(
+n_{kb'} \left( \dfrac{p_{kb'}}{q_{k}}   \right)^{-1/\sigma} +  
+(n - n_{kb'}) \left( \dfrac{p_{(-k)b'}}{q_{-k}}   \right)^{-1/\sigma} \right) + 
+\dfrac{p_i^{-1/\sigma} - p^{-1/\sigma}_{kb} }{ q_k^{-1/\sigma }} 
+\Bigg]^{\sigma (\kappa - 1)-1} \Bigg\}
+\end{aligned}
+\end{equation}
+
+\section{Parameters and Crude Calibration Summary}\label{sec:calibration}
+
+Following the paper, we will use the following as a baseline awareness process
+\begin{equation}
+	\Q(a, f) = \begin{bmatrix}
+	-\left(\theta + \theta_d (1 - f_0(a))\right) & \theta + \theta_d (1 - f_0(a)) & 0 & \ldots & & & \ldots & 0\\
+	\zeta  & -\zeta - \tfrac{N-1}{N}\theta & \tfrac{N-1}{N}\theta & 0 & \ldots & & \ldots & 0\\
+	%0 & \zeta & - \left(\tfrac{N-2}{N}\theta + \zeta \right) & \tfrac{N-2}{N}\theta & 0 & \ldots &  \ldots & 0\\
+	\vdots & & & & & & & \vdots\\ % & \ldots& \ldots& \ldots & \ldots & \ldots & \vdots\\
+	0 & 0 & 0 & 0 & \ldots &\zeta & -\zeta -\tfrac{1}{N}\theta & \tfrac{1}{N}\theta\\
+	0 & 0 & 0 & 0 & \ldots & 0 & \zeta & -\zeta
+	\end{bmatrix}\label{eq:baseline-Q}
+\end{equation}
+
+The baseline parameters are: $\rho = .03, \delta_M = 0.056, \delta_k = .07, \kappa = 3.5, \sigma = 0.15, \alpha = 0.28,$ and $z_M = 1$.  For the default awareness process in \cref{eq:baseline-Q}, the parameters are $\theta = 0.06, \theta_d = 0.21, \zeta = 0.0,$ and $N = 60$
+
+
+
+\begin{table}[ht]
+	\centering
+	\begin{tabularx}{1.1 \linewidth}{l | l | X}
+	\hline\hline
+%\begin{tabular}{l|l} \hline\hline
+Variable & Value & Description\\
+\hline
+$\sigma$ & $\leq 0.21$ & See \cref{sec:markup-calibration}.  Minimum industry markup bound from \cref{prop:stationary-solution}. Calculated as the \textit{average minimum markup} from NBER-CES Manufacturing Industry Database as summarized in \cref{tab:markups-summary}.  Baseline is $\sigma = 0.15$.\\ %and \cite{NekardaRamey2011}
+$\kappa/(\kappa - 1) - 1$ & $\geq 0.39$   &See \cref{sec:markup-calibration}.  Maximum industry bound from \cref{prop:stationary-solution}.  Calculated as the \textit{average maximum markup} from NBER-CES Manufacturing Industry Database, and summarized in \cref{tab:markups-summary}.  Baseline is $\kappa = 3.5$\\
+$\theta$ & $> 0.019$ & See \cref{sec:growth-parameterization}.  From Nonlinear Least Squares, industry panel growth rates, and theoretical bounds. Uses $\theta = 0.06$ as the baseline.\\
+$\theta_d$ & $>0.11$& See \cref{sec:growth-parameterization}.  From Nonlinear Least Squares, industry panel growth rates, and theoretical bounds.  Uses $\theta_d = 0.21$ as the baseline.\\
+%$\delta$ & .123 & $1 - e^{-\delta} = .116$, for the exponential parameter of the firm age distribution where 11.6\% is the firm entry/death rate per annum from the US Small Business Administration.  See \cite{Luttmer2007}.\\
+$\delta_M$ & $[0.0225,0.18]$ &See \cref{sec:deltaM-calibration}. From \cite{BrodaWeinstein2010}, trademark obsolescence rates, or \cite{AtkesonBurstein2015}.  See \cref{sec:deltaM-calibration}.  Uses $\delta_M = 0.056$ from \cite{BrodaWeinstein2010} as the baseline.\\
+$N$ & Irrelevant & With the $\theta$ and $\theta_d$ above, the $N$ is essentially irrelevant (as long as it is above 5-10).  Growth in $\hat{n}$ is estimated to be too slow to converge close to $N$ prior to obsolescence.\\
+$\delta_k$ &$ 0.07$ & Typical capital depreciation rate\\
+$\alpha$ & $0.28$ & Set from the 1980 corporate labor share in the data, with the factor share distortion, $B(t)$, derived in \cref{sec:macro-equilibrium}.\footnotemark\\
+$\rho$ & $0.03$ & A typical interest rate target\\
+$\gamma$ & $[1, 5]$ & Typical range of elasticity of intertemporal substitution\\
+$z, z_M, \nu$ & N/A & Level effects, not calibrated\\
+\hline\end{tabularx}
+	\caption{Rough Example Parameter Calibration}
+	\label{tab:parameter-calibration}
+\end{table}\footnotetext{Recall that due to the distortions in markups and profits, this can no longer be calibrated directly from the labor share proportion.}
+\end{document}
